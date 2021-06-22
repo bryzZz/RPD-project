@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program</title>
+
+    <script type="text/javascript" src="/eel.js"></script> <!-- подключение модуля eel -->
+    <script defer src="./js/index.js"></script> <!-- подключение основного скрипта -->
+
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+</head>
+<body>
+    
+    <form class="form" action="#">
+
+        <div class="lastName-firstName">
+            <input type="text" name="firstName" tabindex="1" placeholder="введите ваше имя" required>
+            <input type="text" name="lastName" tabindex="2" placeholder="введите вашу фамилию" required>
+        </div>
+
+        <div class="sex">
+            <input type="radio" id="male" name="sex" value="male">
+            <label for="male">Male</label>
+
+            <input type="radio" id="female" name="sex" value="female">
+            <label for="female">Female</label>
+        </div>
+        
+        <button type="submit">submit</button>
+
+    </form>
+
+    <div class="info"></div>
+
+</body>
+</html>
