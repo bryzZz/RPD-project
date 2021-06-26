@@ -6,82 +6,20 @@
 //   return Math.random();
 // }
 
-const formContainer = document.querySelector('.formContainer');
-formContainer.append(getForm(0));
+const formContainer = document.querySelector('.formContainer'); //находим на странице тот самый контейнер для форм
+setNewForm(0); // добавляем в этот контейнер новый элемент(1 форму)
 
-const allData = {};
+const allData = {}; // Объект где будут храниться все будущие данные
 
-function createForm(formId, componentsList){
-    const form = document.createElement('form');
-    form.classList.add('form');
-
-    let formInner = '';
-    for(let i = 0; i < componentsList.length; i++){
-        let name = componentsList[i]?.name,
-            text = componentsList[i]?.text,
-            inputType = componentsList[i]?.inputType,
-            inputValue = componentsList[i]?.inputValue,
-            datalist = componentsList[i]?.datalist,
-            placeholder = componentsList[i]?.placeholder,
-            required = componentsList[i]?.required;
-
-        let formItem = `
-        <div class="form__field ${name}">
-            <p class="${name}__text">${text}:</p>
-            <input ${datalist ? 'list=' + '\"' + name + '\"' : ''} type="${inputType}" name="${name}" tabindex="${i}" value="${inputValue}" placeholder="${placeholder}" ${required ? 'required' : ''}">
-        `;
-
-        if(datalist){
-            formItem += `<datalist id="${name}">`;
-
-            datalist.forEach(item => {
-                formItem += `<option value="${item}">`;
-            });
-
-            formItem += `</datalist>`;
-        }
-
-        formItem += '</div>';
-
-        formInner += formItem;
-    }
-
-    form.innerHTML = `<div class="form__fields">
-        <input id="image-file" type="file" />
-        ${formInner}
-        <div class="form__navigation">
-            ${formId === 0 ? '<button class="exit">Выход</button>' : '<button class="back">Назад</button>'}
-            <button type="submit" class="next">Дальше</button>
-        </div>
-    </div>`;
-
-    if(formId !== 0){
-        form.querySelector('.back').addEventListener('click', (e) => {
-            setNewForm(formId - 1);
-        });
-    }
-
-    // событие которое сработает когда форма отправится
-    form.addEventListener('submit', (e) => {
-        e.preventDefault(); // отмена перезагрузки при отправке
-
-        setNewForm(1);
-    
-        const formData = Object.fromEntries(new FormData(e.target)); // получение данных из формы в JSON формате
-        Object.assign(allData, formData);
-
-        eel.myPrint(JSON.stringify(allData))(); // вызов фуекции из python
-    });
-
-    return form;
-}
-
+// основная функция которая очищает контейнер форм и ложит туда новую
 function setNewForm(formId){
-    formContainer.innerHTML = '';
-    formContainer.append(getForm(formId));
+    formContainer.innerHTML = ''; // очистка внутренностей контейнера
+    formContainer.append(getForm(formId)); // добавление туда новой формы
 }
 
+// функция которая возвращает форму по её id
 function getForm(formId){
+    // сотрим какой id и возвращаем новую форму
     if(formId === 0){
         return createForm(formId, [
             {
@@ -149,4 +87,78 @@ function getForm(formId){
             }
         ]);
     }
+
+    return;
+}
+
+// функция которая делает форму, в неё передаётся id формы и список компонентов
+function createForm(formId, componentsList){
+    const form = document.createElement('form'); // создание новой пустой формы
+    form.classList.add('form');// добавление этой форме класса
+
+    let formInner = ''; // тут будет внутренняя вёрска для формы
+    for(let i = 0; i < componentsList.length; i++){ // цикл переберёт все переданные элементы
+        // вытаскиваем переменные из элемента
+        let name = componentsList[i]?.name,
+            text = componentsList[i]?.text,
+            inputType = componentsList[i]?.inputType,
+            inputValue = componentsList[i]?.inputValue,
+            datalist = componentsList[i]?.datalist,
+            placeholder = componentsList[i]?.placeholder,
+            required = componentsList[i]?.required;
+
+        // созжание вёрски элемента "${}" так можно вставлять переменные в строку
+        let formItem = `
+        <div class="form__field ${name}">
+            <p class="${name}__text">${text}:</p>
+            <input ${datalist ? 'list=' + '\"' + name + '\"' : ''} type="${inputType}" name="${name}" tabindex="${i}" value="${inputValue}" placeholder="${placeholder}" ${required ? 'required' : ''}">
+        `;
+
+        // если для элемента есть варианты выбора то вставялем и их в вёрстку
+        if(datalist){
+            formItem += `<datalist id="${name}">`;
+
+            datalist.forEach(item => {
+                formItem += `<option value="${item}">`;
+            });
+
+            formItem += `</datalist>`;
+        }
+
+        formItem += '</div>'; // закрываем вёрску элемента
+
+        formInner += formItem; // добавляем вёрску элемента во внутрь формы
+    }
+
+    // вёрска внутри всеё формы
+    form.innerHTML = `<div class="form__fields">
+        ${formId === 0 ? '<input id="image-file" type="file" />' : ''}
+        ${formInner}
+        <div class="form__navigation">
+            ${formId === 0 ? '<button class="exit">Выход</button>' : '<button class="back">Назад</button>'}
+            <button type="submit" class="next">Дальше</button>
+        </div>
+    </div>`;
+
+    // если форма не первая то должна быть кнопка назад, находим её и вешаем на нее событие выова предыдущей формы
+    if(formId !== 0){
+        form.querySelector('.back').addEventListener('click', (e) => {
+            setNewForm(formId - 1);
+        });
+    }
+
+    // событие которое сработает когда форма отправится
+    form.addEventListener('submit', (e) => {
+        e.preventDefault(); // отмена перезагрузки при отправке
+
+        setNewForm(formId + 1); // показ следующеей формы
+    
+        const formData = Object.fromEntries(new FormData(e.target)); // получение данных из формы в JSON формате
+
+        Object.assign(allData, formData); // включение данных из формы в общий объект
+
+        eel.myPrint(JSON.stringify(allData))(); // вызов фуекции из python
+    });
+
+    return form;
 }
