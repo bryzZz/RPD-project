@@ -10,12 +10,28 @@ function getForm(componentsList){
     let form = '';
 
     for(let i = 0; i < componentsList.length; i++){
+        let name = componentsList[i]?.name,
+            text = componentsList[i]?.text,
+            inputType = componentsList[i]?.inputType,
+            inputValue = componentsList[i]?.inputValue,
+            datalist = componentsList[i]?.datalist,
+            placeholder = componentsList[i]?.placeholder,
+            required = componentsList[i]?.required;
+
         let formItem = `
-        <div class="form__field ${componentsList[i]?.name}">
-            <p class="${componentsList[i]?.name}__text">${componentsList[i]?.text}:</p>
-            <input type="${componentsList[i]?.inputType}" name="${componentsList[i]?.name}" tabindex="${i}" value="${componentsList[i]?.inputValue}" placeholder="${componentsList[i]?.placeholder}" ${componentsList[i]?.required ? 'required' : ''}>
-        </div>
+        <div class="form__field ${name}">
+            <p class="${name}__text">${text}:</p>
+            <input ${datalist ? 'list=' + '\"' + name + '\"' : ''} type="${inputType}" name="${name}" tabindex="${i}" value="${inputValue}" placeholder="${placeholder}" required="${required}">
         `;
+        if(datalist){
+            formItem += `<datalist id="${name}">`;
+            datalist.forEach(item => {
+                formItem += `<option value="${item}">`;
+            });
+            formItem += `</datalist>`;
+        }
+        formItem += '</div>';
+
         form += formItem;
     }
 
@@ -59,7 +75,8 @@ document.querySelector('.form__fields').innerHTML = getForm([
         name: 'finalExamination',
         text: 'Введите форму итоговой аттестации',
         inputType: 'text',
-        inputValue: 'Экз.',
+        inputValue: '',
+        datalist: ['Экз.', 'Зачёт'],
         placeholder: '',
         required: true
     }
