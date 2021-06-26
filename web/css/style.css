@@ -1,0 +1,17 @@
+.form__field{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    max-width: 450px;
+    max-height: 30px;
+}
+
+.form__navigation{
+    max-width: 450px;
+    margin-top: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

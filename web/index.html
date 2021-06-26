@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Program</title>
 
+    <link rel="stylesheet" href="./css/style.css">
+
     <script type="text/javascript" src="/eel.js"></script> <!-- подключение модуля eel -->
     <script defer src="./js/index.js"></script> <!-- подключение основного скрипта -->
 
@@ -15,21 +17,23 @@
     
     <form class="form" action="#">
 
-        <div class="lastName-firstName">
-            <input type="text" name="firstName" tabindex="1" placeholder="введите ваше имя" required>
-            <input type="text" name="lastName" tabindex="2" placeholder="введите вашу фамилию" required>
+        <div class="form__fields">
+            <input id="image-file" type="file" />
         </div>
 
-        <div class="sex">
+        <div class="form__navigation">
+            <button class="exit">Выход</button>
+            <button type="submit" class="next">Дальше</button>
+        </div>
+
+        <!-- <div class="sex">
             <input type="radio" id="male" name="sex" value="male">
             <label for="male">Male</label>
 
             <input type="radio" id="female" name="sex" value="female">
             <label for="female">Female</label>
-        </div>
+        </div> -->
         
-        <button type="submit">submit</button>
-
     </form>
 
     <div class="info"></div>
