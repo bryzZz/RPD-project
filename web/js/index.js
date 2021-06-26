@@ -7,9 +7,10 @@
 // }
 
 const formContainer = document.querySelector('.formContainer'); //находим на странице тот самый контейнер для форм
-setNewForm(0); // добавляем в этот контейнер новый элемент(1 форму)
 
 const allData = {}; // Объект где будут храниться все будущие данные
+
+setNewForm(0); // добавляем в этот контейнер новый элемент(1 форму)
 
 // основная функция которая очищает контейнер форм и ложит туда новую
 function setNewForm(formId){
@@ -111,7 +112,7 @@ function createForm(formId, componentsList){
         let formItem = `
         <div class="form__field ${name}">
             <p class="${name}__text">${text}:</p>
-            <input ${datalist ? 'list=' + '\"' + name + '\"' : ''} type="${inputType}" name="${name}" tabindex="${i}" value="${inputValue}" placeholder="${placeholder}" ${required ? 'required' : ''}">
+            <input ${datalist ? 'list=' + '\"' + name + '\"' : ''} type="${inputType}" name="${name}" tabindex="${i}" value="${allData[name] ? allData[name] : inputValue}" placeholder="${placeholder}" ${required ? 'required' : ''}">
         `;
 
         // если для элемента есть варианты выбора то вставялем и их в вёрстку
