@@ -11,6 +11,12 @@ export default class Form{
         const form = document.createElement('form'); // создание новой пустой формы
         form.classList.add(this._formClass); // добавление этой форме класса
 
+        if(this._id === 0){
+            document.querySelector('.name').textContent = 'РПД IV пункт';
+            document.querySelector('.name').classList.add('center');
+            form.classList.add('center');
+        }
+
         let formInner = document.createElement('div'); // тут будет внутренняя вёрска для формы
         formInner.classList.add(this._formClass + '__inner');
 
@@ -60,6 +66,7 @@ export default class Form{
 
         // вёрска внутри всей формы
         form.innerHTML = `<div class="form__fields">
+            <legend>Форма №${this._id + 1}</legend>
             ${formInner.innerHTML}
             ${this._id === 0 ? ` <div class="${this._formClass + '__field'}"> <input id="image-file" type="file" /> </div>` : ''}
             </div>

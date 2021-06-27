@@ -10,9 +10,25 @@ body{
 .name{
     text-decoration: underline;
 }
+.name.center{
+    text-align: center;
+    margin-bottom: 30px;
+}
+
 .form{
     margin-top: 20px;
     max-width: 500px;
+}
+.form__field:nth-child(2){
+    border-top: 1px solid grey;
+}
+
+.form.center{
+    margin: 0 auto;
+}
+
+.form legend{
+    font-weight: 300;
 }
 
 .form__field{

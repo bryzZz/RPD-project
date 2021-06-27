@@ -164,13 +164,22 @@ function getForm(formId){
     
         if(formId === 0){ // если форма первая то информация просто идёт в общий объект
             allData = {...allData, ...formData};
-            const semesters = [];
-            for(let i = 0; i < allData.numberOfSemesters; i++){
-                semesters.push({semesterId: i, complited: false});
+            
+            if(!allData.semesters){
+                const semesters = [];
+                for(let i = 0; i < allData.numberOfSemesters; i++){
+                    semesters.push({semesterId: i, complited: false});
+                }
+                allData.semesters = semesters;
             }
-            allData.semesters = semesters;
 
-            document.querySelector('.name').textContent = '1 семестр';
+            for(let i = 0; i < allData.semesters.length; i++){
+                if(!allData.semesters[i].complited){
+                    document.querySelector('.name').textContent = `${i+1} семестр`;
+                    document.querySelector('.name').classList.remove('center');
+                    break;
+                }
+            }
         }else{ // в другом случае информация идёт в семестр
             for(let i = 0; i < allData.semesters.length; i++){
                 if(!allData.semesters[i].complited){
