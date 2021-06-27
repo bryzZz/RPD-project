@@ -168,9 +168,9 @@ function createForm(formContainer, formId, componentsList){
     
         const formData = Object.fromEntries(new FormData(e.target)); // получение данных из формы в JSON формате
 
-        if(formId === 0){
+        if(formId === 0){ // если форма первая то информация просто идёт в общий объект
             allData = {...allData, ...formData};
-        }else{
+        }else{ // в другом случае информация идёт в семестр
             if(allData.semesters.length !== 0){
                 for(semester of allData.semesters){
                     if(semester.complited){
