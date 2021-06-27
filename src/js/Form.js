@@ -29,12 +29,12 @@ export default class Form{
             formItem.classList.add(this._formClass + '__field', name);
 
             const p = document.createElement('p');
-            p.classList.add(name + '__text');
+            p.classList.add(this._formClass + '__field-text', name + '__text');
             p.textContent = `${text}:`;
             formItem.append(p);
 
             const input = document.createElement('input');
-            input.classList.add(name + '__input');
+            input.classList.add(this._formClass + '__field-input', name + '__input');
             input.setAttribute('type', inputType);
             input.setAttribute('name', name);
             input.setAttribute('tabindex', i+1);
@@ -60,8 +60,8 @@ export default class Form{
 
         // вёрска внутри всей формы
         form.innerHTML = `<div class="form__fields">
-            ${this._id === 0 ? '<input id="image-file" type="file" />' : ''}
             ${formInner.innerHTML}
+            ${this._id === 0 ? ` <div class="${this._formClass + '__field'}"> <input id="image-file" type="file" /> </div>` : ''}
             </div>
             <div class="form__navigation">
                 <button class="exit">Выход</button>

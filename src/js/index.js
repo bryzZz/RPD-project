@@ -33,7 +33,7 @@ import Form from './Form';
 
 const formContainer = document.querySelector('.formContainer'); //находим на странице тот самый контейнер для форм
 
-let allData = JSON.parse(localStorage.getItem('allData')) || {semesters: []}; // Объект где будут храниться все будущие данные
+let allData = JSON.parse(localStorage.getItem('allData')) || {}; // Объект где будут храниться все будущие данные
 localStorage.setItem('allData', JSON.stringify(allData));
 
 setNewForm(formContainer, 0); // добавляем в этот контейнер новый элемент(1 форму)
@@ -108,16 +108,13 @@ function getForm(formId){
     }
     if(formId === 1){
         let data;
-        if(allData.semesters.length === 0) data = {}
-        else{
-            for(let semester of allData.semesters){
-                if(!semester.complited){
-                    data = semester;
-                    break;
-                }
+        for(let semester of allData.semesters){
+            if(!semester.complited){
+                data = semester;
+                break;
             }
         }
-        console.log(data);
+
         return new Form({
             id: formId,
             formClass: 'form',
@@ -161,27 +158,29 @@ function getForm(formId){
     }
 
     function submit (e) {
-        // let allData = JSON.parse(localStorage.getItem('allData'));
-    
         e.preventDefault(); // отмена перезагрузки при отправке
-    
-        setNewForm(formContainer, formId + 1); // показ следующеей формы
     
         const formData = Object.fromEntries(new FormData(e.target)); // получение данных из формы в JSON формате
     
         if(formId === 0){ // если форма первая то информация просто идёт в общий объект
             allData = {...allData, ...formData};
+            const semesters = [];
+            for(let i = 0; i < allData.numberOfSemesters; i++){
+                semesters.push({semesterId: i, complited: false});
+            }
+            allData.semesters = semesters;
+
+            document.querySelector('.name').textContent = '1 семестр';
         }else{ // в другом случае информация идёт в семестр
-            if(allData.semesters.length !== 0){
-                for(semester of allData.semesters){
-                    if(semester.complited){
-                        semester = {...semester, ...formData};
-                    }
+            for(let i = 0; i < allData.semesters.length; i++){
+                if(!allData.semesters[i].complited){
+                    allData.semesters[i] = {...allData.semesters[i], ...formData};
+                    break;
                 }
-            }else{
-                allData.semesters.push({...formData});
             }
         }
+
+        setNewForm(formContainer, formId + 1); // показ следующеей формы
     
         localStorage.setItem('allData', JSON.stringify(allData));
     }
