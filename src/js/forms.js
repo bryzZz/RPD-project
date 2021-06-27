@@ -1,15 +1,13 @@
-const formContainer = document.querySelector('.formContainer'); //находим на странице тот самый контейнер для форм
-
 // основная функция которая очищает контейнер форм и ложит туда новую
 function setNewForm(formContainer, formId){
     formContainer.innerHTML = ''; // очистка внутренностей контейнера
-    formContainer.append(getForm(formId)); // добавление туда новой формы
+    formContainer.append(getForm(formContainer, formId)); // добавление туда новой формы
 }
 // функция которая возвращает форму по её id
-function getForm(formId){
+function getForm(formContainer, formId){
     // сотрим какой id и возвращаем новую форму
     if(formId === 0){
-        return createForm(formId, [
+        return createForm(formContainer, formId, [
             {
                 name: 'disciplineName',
                 text: 'Введите название дисциплины',
@@ -63,13 +61,36 @@ function getForm(formId){
         ]);
     }
     if(formId === 1){
-        return createForm(formId, [
+        return createForm(formContainer, formId, [
             {
-                name: 'sseminarsHour',
+                name: 'seminarsHour',
                 text: 'Введите количество на семенары',
                 inputType: 'number',
                 inputValue: '0',
-                // datalist: ['1', '2'],
+                placeholder: '',
+                required: true
+            },
+            {
+                name: 'lecturesHour',
+                text: 'Введите количество на лекции',
+                inputType: 'number',
+                inputValue: '0',
+                placeholder: '',
+                required: true
+            },
+            {
+                name: 'consultationsHour',
+                text: 'Введите количество на консультации',
+                inputType: 'number',
+                inputValue: '0',
+                placeholder: '',
+                required: true
+            },
+            {
+                name: 'independentWorkHour',
+                text: 'Введите количество на самостоятельные работы',
+                inputType: 'number',
+                inputValue: '0',
                 placeholder: '',
                 required: true
             }
@@ -80,9 +101,11 @@ function getForm(formId){
 }
 
 // функция которая делает форму, в неё передаётся id формы и список компонентов
-function createForm(formId, componentsList){
+function createForm(formContainer, formId, componentsList){
     const form = document.createElement('form'); // создание новой пустой формы
-    form.classList.add('form');// добавление этой форме класса
+    form.classList.add('form'); // добавление этой форме класса
+
+    let allData = JSON.parse(localStorage.getItem('allData'));
 
     let formInner = ''; // тут будет внутренняя вёрска для формы
     for(let i = 0; i < componentsList.length; i++){ // цикл переберёт все переданные элементы
@@ -95,13 +118,11 @@ function createForm(formId, componentsList){
             placeholder = componentsList[i]?.placeholder,
             required = componentsList[i]?.required;
 
-        let allData = JSON.parse(localStorage.getItem('allData'));
-
         // созжание вёрски элемента "${}" так можно вставлять переменные в строку
         let formItem = `
         <div class="form__field ${name}">
             <p class="${name}__text">${text}:</p>
-            <input ${datalist ? 'list=' + '\"' + name + '\"' : ''} type="${inputType}" name="${name}" tabindex="${i}" value="${allData[name] ? allData[name] : inputValue}" placeholder="${placeholder}" ${required ? 'required' : ''}">
+            <input ${datalist ? 'list=' + '\"' + name + '\"' : ''} type="${inputType}" name="${name}" tabindex="${i+1}" value="${allData[name] ? allData[name] : inputValue}" placeholder="${placeholder}" ${required ? 'required' : ''}">
         `;
 
         // если для элемента есть варианты выбора то вставялем и их в вёрстку
@@ -120,7 +141,7 @@ function createForm(formId, componentsList){
         formInner += formItem; // добавляем вёрску элемента во внутрь формы
     }
 
-    // вёрска внутри всеё формы
+    // вёрска внутри всей формы
     form.innerHTML = `<div class="form__fields">
         ${formId === 0 ? '<input id="image-file" type="file" />' : ''}
         ${formInner}
@@ -132,7 +153,7 @@ function createForm(formId, componentsList){
 
     // если форма не первая то должна быть кнопка назад, находим её и вешаем на нее событие выова предыдущей формы
     if(formId !== 0){
-        form.querySelector('.back').addEventListener('click', (e) => {
+        form.querySelector('.back').addEventListener('click', () => {
             setNewForm(formContainer, formId - 1);
         });
     }
@@ -147,10 +168,21 @@ function createForm(formId, componentsList){
     
         const formData = Object.fromEntries(new FormData(e.target)); // получение данных из формы в JSON формате
 
-        allData = {...allData, ...formData}; // включение данных из формы в общий объект
-        localStorage.setItem('allData', JSON.stringify(allData));
+        if(formId === 0){
+            allData = {...allData, ...formData};
+        }else{
+            if(allData.semesters.length !== 0){
+                for(semester of allData.semesters){
+                    if(semester.complited){
+                        semester = {...semester, ...formData};
+                    }
+                }
+            }else{
+                allData.semesters.push({...formData});
+            }
+        }
 
-        console.log(allData);
+        localStorage.setItem('allData', JSON.stringify(allData));
     });
 
     return form;
