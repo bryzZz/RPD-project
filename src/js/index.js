@@ -11,9 +11,9 @@ localStorage.setItem('allData', JSON.stringify(allData));
 setNewForm(formContainer, 0); // добавляем в этот контейнер новый элемент(1 форму)
 
 // основная функция которая очищает контейнер форм и ложит туда новую
-function setNewForm(formContainer, formId){
-    formContainer.innerHTML = ''; // очистка внутренностей контейнера
-    formContainer.append(getForm(formId)); // добавление туда новой формы
+function setNewForm(container, formId){
+    container.innerHTML = ''; // очистка внутренностей контейнера
+    container.append(getForm(formId)); // добавление туда новой формы
 }
 // функция которая возвращает форму по её id
 function getForm(formId){
@@ -76,9 +76,18 @@ function getForm(formId){
             ],
             data: allData,
             objectToSaveData: allData,
-            submitFunction: submit,
+            compliteFunction: submit,
+            buttons: ['Далее']
         }).getForm();
     }else{
+        for(let i = 0; i < allData.semesters.length; i++){ // показать какой семестр на странице
+            if(!allData.semesters[i].complited){
+                document.querySelector('.title').textContent = `${i+1} семестр`;
+                document.querySelector('.title').classList.remove('center');
+                break;
+            }
+        }
+
         let currentSem;
         for(let semester of allData.semesters){
             if(!semester.complited){
@@ -127,7 +136,8 @@ function getForm(formId){
                 ],
                 data: currentSem,
                 objectToSaveData: currentSem,
-                submitFunction: submit
+                compliteFunction: submit,
+                buttons: ['Далее']
             }).getForm();
         }else{
             let currentTopic;
@@ -138,8 +148,15 @@ function getForm(formId){
                         break;
                     }
                 }
+                currentSem.topics.push({complited: false});
+                for(let topic of currentSem.topics){
+                    if(!topic.complited){
+                        currentTopic = topic;
+                        break;
+                    }
+                }
             }else{
-                currentSem.topics = [{complited: false}];
+                currentSem.topics = [{complited: false, subtopicComplited: false}];
                 currentTopic = currentSem.topics[0];
             }
 
@@ -191,17 +208,58 @@ function getForm(formId){
                     ],
                     data: currentTopic,
                     objectToSaveData: currentTopic,
-                    submitFunction: submit
+                    compliteFunction: submit,
+                    againFunction: showOneMore,
+                    buttons: ['Закончить', 'Далее']
                 }).getForm();
-            }
+            }else{
+                let currentTopic;
+                if(currentSem.topics){
+                    for(let topic of currentSem.topics){
+                        if(!topic.complited){
+                            currentTopic = topic;
+                            break;
+                        }
+                    }
+                    currentSem.topics.push({complited: false});
+                    for(let topic of currentSem.topics){
+                        if(!topic.complited){
+                            currentTopic = topic;
+                            break;
+                        }
+                    }
+                }else{
+                    currentSem.topics = [{complited: false}];
+                    currentTopic = currentSem.topics[0];
+                }
+
+                if(formId === 3){
+                    return new Form({
+                        id: formId,
+                        formClass: 'form',
+                        fieldsArr: [
+                            {
+                                name: 'topicName',
+                                text: 'Введите название темы',
+                                inputType: 'text',
+                                inputValue: '',
+                                placeholder: '',
+                                required: true
+                            }
+                        ],
+                        data: currentTopic,
+                        objectToSaveData: currentTopic,
+                        compliteFunction: submit,
+                        againFunction: showOneMore,
+                        buttons: ['Закончить', 'Далее']
+                    }).getForm();
+                }
+            } 
         }
     }
 
-    function submit (e) {
-        e.preventDefault(); // отмена перезагрузки при отправке
-    
-        const formData = Object.fromEntries(new FormData(e.target)); // получение данных из формы в JSON формате
-        
+    function submit (e, formData) {
+        e.preventDefault();
         for(const [key, value] of Object.entries(formData)){
             this._objectToSaveData[key] = value;
         }
@@ -215,19 +273,27 @@ function getForm(formId){
                 this._objectToSaveData.semesters = semesters;
             }
 
-            for(let i = 0; i < this._objectToSaveData.semesters.length; i++){
-                if(!this._objectToSaveData.semesters[i].complited){
-                    document.querySelector('.title').textContent = `${i+1} семестр`;
-                    document.querySelector('.title').classList.remove('center');
-                    break;
-                }
-            }
-        }else if(this._id === 1){}
+        }else if(this._id === 1){
+            
+        }else if(this._id === 2){
+            this._objectToSaveData.complited = true;
+        }
 
-        setNewForm(formContainer, formId + 1); // показ следующеей формы
+        setNewForm(formContainer, this._id + 1); // показ следующеей формы
     
         localStorage.setItem('allData', JSON.stringify(allData));
-        console.log(allData);
+    }
+
+    function showOneMore (e, formData){
+        for(const [key, value] of Object.entries(formData)){
+            this._objectToSaveData[key] = value;
+        }
+        
+        this._objectToSaveData.complited = true;
+
+        setNewForm(formContainer, this._id);
+    
+        localStorage.setItem('allData', JSON.stringify(allData));
     }
 
     return;

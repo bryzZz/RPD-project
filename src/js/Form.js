@@ -1,11 +1,13 @@
 export default class Form{
-    constructor({id, formClass, fieldsArr, data, objectToSaveData, submitFunction}){
+    constructor({id, formClass, fieldsArr, data, objectToSaveData, compliteFunction, againFunction, buttons}){
         this._id = id;
         this._formClass = formClass;
         this._fieldsArr = fieldsArr;
         this._data = data;
         this._objectToSaveData = objectToSaveData;
-        this._submitFunction = submitFunction;
+        this._compliteFunction = compliteFunction;
+        this._againFunction = againFunction;
+        this._buttons = buttons;
     }
 
     getForm(){
@@ -70,13 +72,28 @@ export default class Form{
             <legend>Форма №${this._id + 1}</legend>
             ${formInner.innerHTML}
             ${this._id === 0 ? ` <div class="${this._formClass + '__field'}"> <input id="image-file" type="file" /> </div>` : ''}
-            </div>
-            <div class="form__navigation">
-                <button class="exit">Выход</button>
-                <button type="submit" class="next">Дальше</button>
             </div>`;
 
-        form.addEventListener('submit', (e) => this._submitFunction(e).bind(this));
+        const formNavigation = document.createElement('div');
+        formNavigation.classList.add(this._formClass + '__navigation');
+
+        const compliteBtn = document.createElement('button');
+        compliteBtn.classList.add(this._formClass + '__navigation-next');
+        compliteBtn.textContent = this._buttons[0];
+        compliteBtn.addEventListener('click', (e) => this._compliteFunction(e, Object.fromEntries(new FormData(form))).bind(this));
+
+        if(this._buttons.length === 2){
+            const againBtn = document.createElement('button');
+            againBtn.classList.add(this._formClass + '__navigation-again');
+            againBtn.textContent = this._buttons[1];
+            againBtn.addEventListener('click', (e) => this._againFunction(e, Object.fromEntries(new FormData(form))).bind(this));
+            formNavigation.append(againBtn);
+        }
+
+        formNavigation.append(compliteBtn);
+        form.append(formNavigation);
+
+        // form.addEventListener('submit', (e) => this._submitFunction(e).bind(this));
 
         return form;
     }
