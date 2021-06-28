@@ -15,9 +15,10 @@ function setNewForm(container, formId){
     container.innerHTML = ''; // очистка внутренностей контейнера
     container.append(getForm(formId)); // добавление туда новой формы
 }
+
 // функция которая возвращает форму по её id
 function getForm(formId){
-    console.log(allData);
+    // console.log(allData);
     // сотрим какой id и возвращаем новую форму
     if(formId === 0){
         return new Form({
@@ -97,6 +98,12 @@ function getForm(formId){
                 break;
             }
         }
+        
+        if(currentSem === undefined){
+            document.querySelector('.title').textContent = 'that it, check console';
+            console.log(allData);
+            return;
+        }
 
         if(formId === 1){
             return new Form({
@@ -144,8 +151,18 @@ function getForm(formId){
             }).getForm();
         }else{
             if(formId === 2){
-                currentSem.topics.push({complited: false, subtopics: []});
-                let currentTopic = currentSem.topics[currentSem.topics.length - 1];
+                let currentTopic;
+                if(!currentSem.isTopicsComplited){
+                    currentSem.topics.push({complited: false, subtopics: []});
+                    currentTopic = currentSem.topics[currentSem.topics.length - 1];
+                }else{
+                    for(let topic of currentSem.topics){
+                        if(!topic.complited){
+                            currentTopic = topic;
+                            break;
+                        }
+                    }
+                }
 
                 return new Form({
                     id: formId,
@@ -208,6 +225,13 @@ function getForm(formId){
                             break;
                         }
                     }
+
+                    if(currentTopic === undefined){
+                        currentSem.complited = true;
+                        setNewForm(formContainer, 1);
+                        return;
+                    }
+
                     currentTopic.subtopics.push({});
                     let currentSubtopics = currentTopic.subtopics[currentTopic.subtopics.length - 1];
 
@@ -286,13 +310,38 @@ function getForm(formId){
             if(!this._objectToSaveData.semesters){
                 const semesters = [];
                 for(let i = 0; i < this._objectToSaveData.numberOfSemesters; i++){
-                    semesters.push({semesterId: i, complited: false, topics:[]});
+                    semesters.push({semesterId: i, complited: false, topics:[], isTopicsComplited: false});
                 }
                 this._objectToSaveData.semesters = semesters;
             }
 
+        }else{
+            let currentSem, currentTopic;
+            for(let semester of allData.semesters){
+                if(!semester.complited){
+                    currentSem = semester;
+                    break;
+                }
+            }
+            for(let topic of currentSem.topics){
+                if(!topic.complited){
+                    currentTopic = topic;
+                    break;
+                }
+            }
+            if(this._id === 2){
+                currentSem.isTopicsComplited = true;
+            }
+            else if(this._id === 3){
+                currentTopic.complited = true;
+    
+                setNewForm(formContainer, this._id);
+        
+                localStorage.setItem('allData', JSON.stringify(allData));
+    
+                return;
+            }
         }
-        // else if(this._id === 1){}else if(this._id === 2){}
 
         setNewForm(formContainer, this._id + 1); // показ следующеей формы
     
