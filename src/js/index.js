@@ -17,6 +17,7 @@ function setNewForm(container, formId){
 }
 // функция которая возвращает форму по её id
 function getForm(formId){
+    console.log(allData);
     // сотрим какой id и возвращаем новую форму
     if(formId === 0){
         return new Form({
@@ -142,27 +143,10 @@ function getForm(formId){
                 buttons: ['Далее']
             }).getForm();
         }else{
-            let currentTopic;
-            if(currentSem.topics){
-                for(let topic of currentSem.topics){
-                    if(!topic.complited){
-                        currentTopic = topic;
-                        break;
-                    }
-                }
-                currentSem.topics.push({complited: false});
-                for(let topic of currentSem.topics){
-                    if(!topic.complited){
-                        currentTopic = topic;
-                        break;
-                    }
-                }
-            }else{
-                currentSem.topics = [{complited: false, subtopicComplited: false}];
-                currentTopic = currentSem.topics[0];
-            }
-
             if(formId === 2){
+                currentSem.topics.push({complited: false, subtopics: []});
+                let currentTopic = currentSem.topics[currentSem.topics.length - 1];
+
                 return new Form({
                     id: formId,
                     formClass: 'form',
@@ -216,42 +200,73 @@ function getForm(formId){
                     buttons: ['Закончить', 'Далее']
                 }).getForm();
             }else{
-                let currentTopic;
-                if(currentSem.topics){
-                    for(let topic of currentSem.topics){
-                        if(!topic.complited){
-                            currentTopic = topic;
-                            break;
-                        }
-                    }
-                    currentSem.topics.push({complited: false});
-                    for(let topic of currentSem.topics){
-                        if(!topic.complited){
-                            currentTopic = topic;
-                            break;
-                        }
-                    }
-                }else{
-                    currentSem.topics = [{complited: false}];
-                    currentTopic = currentSem.topics[0];
-                }
-
                 if(formId === 3){
+                    let currentTopic;
+                    for(let topic of currentSem.topics){
+                        if(!topic.complited){
+                            currentTopic = topic;
+                            break;
+                        }
+                    }
+                    currentTopic.subtopics.push({});
+                    let currentSubtopics = currentTopic.subtopics[currentTopic.subtopics.length - 1];
+
                     return new Form({
                         id: formId,
                         formClass: 'form',
+                        legend: 'Подтема',
                         fieldsArr: [
                             {
-                                name: 'topicName',
-                                text: 'Введите название темы',
+                                name: 'subtopicName',
+                                text: 'Введите название подтемы',
+                                inputType: 'text',
+                                inputValue: '',
+                                placeholder: '',
+                                required: true
+                            },
+                            {
+                                name: 'seminarsHour',
+                                text: 'Введите количество на семенары',
+                                inputType: 'number',
+                                inputValue: '0',
+                                placeholder: '',
+                                required: true
+                            },
+                            {
+                                name: 'lecturesHour',
+                                text: 'Введите количество на лекции',
+                                inputType: 'number',
+                                inputValue: '0',
+                                placeholder: '',
+                                required: true
+                            },
+                            {
+                                name: 'consultationsHour',
+                                text: 'Введите количество на консультации',
+                                inputType: 'number',
+                                inputValue: '0',
+                                placeholder: '',
+                                required: true
+                            },
+                            {
+                                name: 'independentWorkHour',
+                                text: 'Введите количество на самостоятельные работы',
+                                inputType: 'number',
+                                inputValue: '0',
+                                placeholder: '',
+                                required: true
+                            },
+                            {
+                                name: 'formsOfMonitoringProgress',
+                                text: 'Формы текущего контроля успеваемости',
                                 inputType: 'text',
                                 inputValue: '',
                                 placeholder: '',
                                 required: true
                             }
                         ],
-                        data: currentTopic,
-                        objectToSaveData: currentTopic,
+                        data: currentSubtopics,
+                        objectToSaveData: currentSubtopics,
                         compliteFunction: submit,
                         againFunction: showOneMore,
                         buttons: ['Закончить', 'Далее']
@@ -271,16 +286,13 @@ function getForm(formId){
             if(!this._objectToSaveData.semesters){
                 const semesters = [];
                 for(let i = 0; i < this._objectToSaveData.numberOfSemesters; i++){
-                    semesters.push({semesterId: i, complited: false});
+                    semesters.push({semesterId: i, complited: false, topics:[]});
                 }
                 this._objectToSaveData.semesters = semesters;
             }
 
-        }else if(this._id === 1){
-            
-        }else if(this._id === 2){
-            this._objectToSaveData.complited = true;
         }
+        // else if(this._id === 1){}else if(this._id === 2){}
 
         setNewForm(formContainer, this._id + 1); // показ следующеей формы
     
@@ -292,8 +304,6 @@ function getForm(formId){
             this._objectToSaveData[key] = value;
         }
         
-        this._objectToSaveData.complited = true;
-
         setNewForm(formContainer, this._id);
     
         localStorage.setItem('allData', JSON.stringify(allData));
