@@ -22,6 +22,7 @@ function getForm(formId){
         return new Form({
             id: formId,
             formClass: 'form',
+            legend: 'Начало',
             fieldsArr: [
                 {
                     name: 'disciplineName',
@@ -88,7 +89,7 @@ function getForm(formId){
             }
         }
 
-        let currentSem;
+        let currentSem; // находим первый незаполненый семестр
         for(let semester of allData.semesters){
             if(!semester.complited){
                 currentSem = semester;
@@ -100,6 +101,7 @@ function getForm(formId){
             return new Form({
                 id: formId,
                 formClass: 'form',
+                legend: 'Семестр',
                 fieldsArr: [
                     {
                         name: 'seminarsHour',
@@ -164,6 +166,7 @@ function getForm(formId){
                 return new Form({
                     id: formId,
                     formClass: 'form',
+                    legend: 'Тема',
                     fieldsArr: [
                         {
                             name: 'topicName',

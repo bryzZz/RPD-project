@@ -1,7 +1,8 @@
 export default class Form{
-    constructor({id, formClass, fieldsArr, data, objectToSaveData, compliteFunction, againFunction, buttons}){
+    constructor({id, formClass, legend, fieldsArr, data, objectToSaveData, compliteFunction, againFunction, buttons}){
         this._id = id;
         this._formClass = formClass;
+        this._legend = legend;
         this._fieldsArr = fieldsArr;
         this._data = data;
         this._objectToSaveData = objectToSaveData;
@@ -69,7 +70,7 @@ export default class Form{
 
         // вёрска внутри всей формы
         form.innerHTML = `<div class="form__fields">
-            <legend>Форма №${this._id + 1}</legend>
+            <legend>Форма №${this._id + 1} - ${this._legend}</legend>
             ${formInner.innerHTML}
             ${this._id === 0 ? ` <div class="${this._formClass + '__field'}"> <input id="image-file" type="file" /> </div>` : ''}
             </div>`;
