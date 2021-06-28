@@ -27,7 +27,7 @@ function getForm(formId){
                     name: 'disciplineName',
                     text: 'Введите название дисциплины',
                     inputType: 'text',
-                    inputValue: '',
+                    inputValue: 'ЯРСК',
                     placeholder: 'ЯРСК',
                     required: true
                 },
@@ -59,7 +59,7 @@ function getForm(formId){
                     name: 'finalExamination',
                     text: 'Введите форму итоговой аттестации',
                     inputType: 'text',
-                    inputValue: '',
+                    inputValue: 'Экз.',
                     datalist: ['Экз.', 'Зачёт'],
                     placeholder: '',
                     required: true
@@ -68,102 +68,166 @@ function getForm(formId){
                     name: 'numberOfSemesters',
                     text: 'Введите количество семестров',
                     inputType: 'number',
-                    inputValue: '',
+                    inputValue: '2',
                     datalist: ['1', '2'],
                     placeholder: '',
                     required: true
                 }
             ],
             data: allData,
-            submitFunction: submit
+            objectToSaveData: allData,
+            submitFunction: submit,
         }).getForm();
-    }
-    if(formId === 1){
-        let data;
+    }else{
+        let currentSem;
         for(let semester of allData.semesters){
             if(!semester.complited){
-                data = semester;
+                currentSem = semester;
                 break;
             }
         }
 
-        return new Form({
-            id: formId,
-            formClass: 'form',
-            fieldsArr: [
-                {
-                    name: 'seminarsHour',
-                    text: 'Введите количество на семенары',
-                    inputType: 'number',
-                    inputValue: '0',
-                    placeholder: '',
-                    required: true
-                },
-                {
-                    name: 'lecturesHour',
-                    text: 'Введите количество на лекции',
-                    inputType: 'number',
-                    inputValue: '0',
-                    placeholder: '',
-                    required: true
-                },
-                {
-                    name: 'consultationsHour',
-                    text: 'Введите количество на консультации',
-                    inputType: 'number',
-                    inputValue: '0',
-                    placeholder: '',
-                    required: true
-                },
-                {
-                    name: 'independentWorkHour',
-                    text: 'Введите количество на самостоятельные работы',
-                    inputType: 'number',
-                    inputValue: '0',
-                    placeholder: '',
-                    required: true
+        if(formId === 1){
+            return new Form({
+                id: formId,
+                formClass: 'form',
+                fieldsArr: [
+                    {
+                        name: 'seminarsHour',
+                        text: 'Введите количество на семенары',
+                        inputType: 'number',
+                        inputValue: '0',
+                        placeholder: '',
+                        required: true
+                    },
+                    {
+                        name: 'lecturesHour',
+                        text: 'Введите количество на лекции',
+                        inputType: 'number',
+                        inputValue: '0',
+                        placeholder: '',
+                        required: true
+                    },
+                    {
+                        name: 'consultationsHour',
+                        text: 'Введите количество на консультации',
+                        inputType: 'number',
+                        inputValue: '0',
+                        placeholder: '',
+                        required: true
+                    },
+                    {
+                        name: 'independentWorkHour',
+                        text: 'Введите количество на самостоятельные работы',
+                        inputType: 'number',
+                        inputValue: '0',
+                        placeholder: '',
+                        required: true
+                    }
+                ],
+                data: currentSem,
+                objectToSaveData: currentSem,
+                submitFunction: submit
+            }).getForm();
+        }else{
+            let currentTopic;
+            if(currentSem.topics){
+                for(let topic of currentSem.topics){
+                    if(!topic.complited){
+                        currentTopic = topic;
+                        break;
+                    }
                 }
-            ],
-            data,
-            submitFunction: submit
-        }).getForm();
+            }else{
+                currentSem.topics = [{complited: false}];
+                currentTopic = currentSem.topics[0];
+            }
+
+            if(formId === 2){
+                return new Form({
+                    id: formId,
+                    formClass: 'form',
+                    fieldsArr: [
+                        {
+                            name: 'topicName',
+                            text: 'Введите название темы',
+                            inputType: 'text',
+                            inputValue: '',
+                            placeholder: '',
+                            required: true
+                        },
+                        {
+                            name: 'seminarsHour',
+                            text: 'Введите количество на семенары',
+                            inputType: 'number',
+                            inputValue: '0',
+                            placeholder: '',
+                            required: true
+                        },
+                        {
+                            name: 'lecturesHour',
+                            text: 'Введите количество на лекции',
+                            inputType: 'number',
+                            inputValue: '0',
+                            placeholder: '',
+                            required: true
+                        },
+                        {
+                            name: 'consultationsHour',
+                            text: 'Введите количество на консультации',
+                            inputType: 'number',
+                            inputValue: '0',
+                            placeholder: '',
+                            required: true
+                        },
+                        {
+                            name: 'independentWorkHour',
+                            text: 'Введите количество на самостоятельные работы',
+                            inputType: 'number',
+                            inputValue: '0',
+                            placeholder: '',
+                            required: true
+                        }
+                    ],
+                    data: currentTopic,
+                    objectToSaveData: currentTopic,
+                    submitFunction: submit
+                }).getForm();
+            }
+        }
     }
 
     function submit (e) {
         e.preventDefault(); // отмена перезагрузки при отправке
     
         const formData = Object.fromEntries(new FormData(e.target)); // получение данных из формы в JSON формате
-    
-        if(formId === 0){ // если форма первая то информация просто идёт в общий объект
-            allData = {...allData, ...formData};
-            
-            if(!allData.semesters){
+        
+        for(const [key, value] of Object.entries(formData)){
+            this._objectToSaveData[key] = value;
+        }
+
+        if(this._id === 0){ // если форма первая то информация просто идёт в общий объект
+            if(!this._objectToSaveData.semesters){
                 const semesters = [];
-                for(let i = 0; i < allData.numberOfSemesters; i++){
+                for(let i = 0; i < this._objectToSaveData.numberOfSemesters; i++){
                     semesters.push({semesterId: i, complited: false});
                 }
-                allData.semesters = semesters;
+                this._objectToSaveData.semesters = semesters;
             }
 
-            for(let i = 0; i < allData.semesters.length; i++){
-                if(!allData.semesters[i].complited){
+            for(let i = 0; i < this._objectToSaveData.semesters.length; i++){
+                if(!this._objectToSaveData.semesters[i].complited){
                     document.querySelector('.title').textContent = `${i+1} семестр`;
                     document.querySelector('.title').classList.remove('center');
                     break;
                 }
             }
-        }else{ // в другом случае информация идёт в семестр
-            for(let i = 0; i < allData.semesters.length; i++){
-                if(!allData.semesters[i].complited){
-                    allData.semesters[i] = {...allData.semesters[i], ...formData};
-                    break;
-                }
-            }
-        }
+        }else if(this._id === 1){}
 
         setNewForm(formContainer, formId + 1); // показ следующеей формы
     
         localStorage.setItem('allData', JSON.stringify(allData));
+        console.log(allData);
     }
 
     return;

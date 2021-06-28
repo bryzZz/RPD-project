@@ -1,9 +1,10 @@
 export default class Form{
-    constructor({id, formClass, fieldsArr, data, submitFunction}){
+    constructor({id, formClass, fieldsArr, data, objectToSaveData, submitFunction}){
         this._id = id;
         this._formClass = formClass;
         this._fieldsArr = fieldsArr;
         this._data = data;
+        this._objectToSaveData = objectToSaveData;
         this._submitFunction = submitFunction;
     }
 
@@ -75,8 +76,8 @@ export default class Form{
                 <button type="submit" class="next">Дальше</button>
             </div>`;
 
-        form.addEventListener('submit', this._submitFunction);
+        form.addEventListener('submit', (e) => this._submitFunction(e).bind(this));
 
         return form;
-    }    
+    }
 }
