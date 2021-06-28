@@ -1,0 +1,51 @@
+.form{
+    margin-top: 20px;
+    max-width: 500px;
+
+    &.center{
+        margin: 0 auto;
+    }
+
+    & legend{
+        font-weight: 300;
+    }
+
+    &__field{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        padding: 7px 5px;
+
+        border-bottom: 1px solid grey;
+
+        &:nth-child(2){
+            border-top: 1px solid grey;
+        }
+
+        &-text{
+            font-size: 14px;
+        }
+
+        &-input{
+            outline: none;
+            border: 1px solid grey;
+            border-radius: 3%;
+
+            padding: 3px 3px;
+        }
+    }
+
+    &__navigation{
+        margin-top: 30px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        & button{
+            padding: 1% 2%;
+            cursor: pointer;
+        }
+    }
+}

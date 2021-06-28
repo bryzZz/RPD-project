@@ -1,35 +1,7 @@
 'use strict';
 
-import '../css/style.css';
-// import setNewForm from './forms';
+import '../scss/style.scss';
 import Form from './Form';
-
-// console.log(new Form({
-//     id: 0,
-//     formClass: 'form',
-//     fieldsArr: [
-//         {
-//             name: 'seminarsHour',
-//             text: 'Введите количество на семенары',
-//             inputType: 'number',
-//             inputValue: '0',
-//             datalist: [1, 2, 3],
-//             placeholder: '',
-//             required: false
-//         },
-//         {
-//             name: 'lecturesHour',
-//             text: 'Введите количество на лекции',
-//             inputType: 'number',
-//             inputValue: '0',
-//             placeholder: '',
-//             required: true
-//         },
-//     ],
-//     data: {
-//         seminarsHour: '28'
-//     }
-// }).getForm());
 
 const formContainer = document.querySelector('.formContainer'); //находим на странице тот самый контейнер для форм
 
@@ -175,8 +147,8 @@ function getForm(formId){
 
             for(let i = 0; i < allData.semesters.length; i++){
                 if(!allData.semesters[i].complited){
-                    document.querySelector('.name').textContent = `${i+1} семестр`;
-                    document.querySelector('.name').classList.remove('center');
+                    document.querySelector('.title').textContent = `${i+1} семестр`;
+                    document.querySelector('.title').classList.remove('center');
                     break;
                 }
             }

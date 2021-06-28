@@ -12,8 +12,8 @@ export default class Form{
         form.classList.add(this._formClass); // добавление этой форме класса
 
         if(this._id === 0){
-            document.querySelector('.name').textContent = 'РПД IV пункт';
-            document.querySelector('.name').classList.add('center');
+            document.querySelector('.title').textContent = 'РПД IV пункт';
+            document.querySelector('.title').classList.add('center');
             form.classList.add('center');
         }
 
