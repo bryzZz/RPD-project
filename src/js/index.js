@@ -5,6 +5,7 @@ import Form from './Form';
 
 const formContainer = document.querySelector('.formContainer'); //находим на странице тот самый контейнер для форм
 
+localStorage.clear();
 let allData = JSON.parse(localStorage.getItem('allData')) || {}; // Объект где будут храниться все будущие данные
 localStorage.setItem('allData', JSON.stringify(allData));
 
