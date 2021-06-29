@@ -2,8 +2,9 @@
 
 import '../scss/style.scss';
 import Form from './Form';
+import intermediateResult from './intermediateResult';
 
-const formContainer = document.querySelector('.formContainer'); //находим на странице тот самый контейнер для форм
+const formContainer = document.querySelector('.container'); //находим на странице тот самый контейнер для форм
 
 localStorage.clear();
 let allData = JSON.parse(localStorage.getItem('allData')) || {}; // Объект где будут храниться все будущие данные
@@ -345,7 +346,8 @@ function getForm(formId){
         }
 
         setNewForm(formContainer, this._id + 1); // показ следующеей формы
-    
+        intermediateResult(formContainer, allData);
+
         localStorage.setItem('allData', JSON.stringify(allData));
     }
 
