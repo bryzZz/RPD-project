@@ -4,7 +4,8 @@ import '../scss/style.scss';
 import Form from './Form';
 import intermediateResult from './intermediateResult';
 
-const formContainer = document.querySelector('.container'); //находим на странице тот самый контейнер для форм
+const formContainer = document.querySelector('.container'), //находим на странице тот самый контейнер для форм
+      title = document.querySelector('.title');
 
 localStorage.clear();
 let allData = JSON.parse(localStorage.getItem('allData')) || {}; // Объект где будут храниться все будущие данные
@@ -23,6 +24,9 @@ function getForm(formId){
     // console.log(allData);
     // сотрим какой id и возвращаем новую форму
     if(formId === 0){
+        title.textContent = 'РПД IV пункт';
+        title.classList.add('center');
+
         return new Form({
             id: formId,
             formClass: 'form',
@@ -81,8 +85,8 @@ function getForm(formId){
             ],
             data: allData,
             objectToSaveData: allData,
-            compliteFunction: submit,
-            buttons: ['Далее']
+            // compliteFunction: submit,
+            buttons: [['Далее', submit]]
         }).getForm();
     }else{
         for(let i = 0; i < allData.semesters.length; i++){ // показать какой семестр на странице
@@ -148,8 +152,8 @@ function getForm(formId){
                 ],
                 data: currentSem,
                 objectToSaveData: currentSem,
-                compliteFunction: submit,
-                buttons: ['Далее']
+                // compliteFunction: submit,
+                buttons: [['Далее', submit]]
             }).getForm();
         }else{
             if(formId === 2){
@@ -214,9 +218,9 @@ function getForm(formId){
                     ],
                     data: currentTopic,
                     objectToSaveData: currentTopic,
-                    compliteFunction: submit,
-                    againFunction: showOneMore,
-                    buttons: ['Закончить', 'Далее']
+                    // compliteFunction: submit,
+                    // againFunction: showOneMore,
+                    buttons: [['Далее', showOneMore], ['Закончить', submit]]
                 }).getForm();
             }else{
                 if(formId === 3){
@@ -293,28 +297,29 @@ function getForm(formId){
                         ],
                         data: currentSubtopics,
                         objectToSaveData: currentSubtopics,
-                        compliteFunction: submit,
-                        againFunction: showOneMore,
-                        buttons: ['Закончить', 'Далее']
+                        // compliteFunction: submit,
+                        // againFunction: showOneMore,
+                        buttons: [['Далее', showOneMore], ['Закончить', submit]]
                     }).getForm();
                 }
             } 
         }
     }
 
-    function submit (e, formData) {
+    function submit (e, formData, self) {
         e.preventDefault();
+
         for(const [key, value] of Object.entries(formData)){
-            this._objectToSaveData[key] = value;
+            self._objectToSaveData[key] = value;
         }
 
-        if(this._id === 0){ // если форма первая то информация просто идёт в общий объект
-            if(!this._objectToSaveData.semesters){
+        if(self._id === 0){ // если форма первая то информация просто идёт в общий объект
+            if(!self._objectToSaveData.semesters){
                 const semesters = [];
-                for(let i = 0; i < this._objectToSaveData.numberOfSemesters; i++){
+                for(let i = 0; i < self._objectToSaveData.numberOfSemesters; i++){
                     semesters.push({semesterId: i, complited: false, topics:[], isTopicsComplited: false});
                 }
-                this._objectToSaveData.semesters = semesters;
+                self._objectToSaveData.semesters = semesters;
             }
 
         }else{
@@ -331,13 +336,13 @@ function getForm(formId){
                     break;
                 }
             }
-            if(this._id === 2){
+            if(self._id === 2){
                 currentSem.isTopicsComplited = true;
             }
-            else if(this._id === 3){
+            else if(self._id === 3){
                 currentTopic.complited = true;
     
-                setNewForm(formContainer, this._id);
+                setNewForm(formContainer, self._id);
         
                 localStorage.setItem('allData', JSON.stringify(allData));
     
@@ -345,18 +350,18 @@ function getForm(formId){
             }
         }
 
-        setNewForm(formContainer, this._id + 1); // показ следующеей формы
+        setNewForm(formContainer, self._id + 1); // показ следующеей формы
         intermediateResult(formContainer, allData);
 
         localStorage.setItem('allData', JSON.stringify(allData));
     }
 
-    function showOneMore (e, formData){
+    function showOneMore (e, formData, self){
         for(const [key, value] of Object.entries(formData)){
-            this._objectToSaveData[key] = value;
+            self._objectToSaveData[key] = value;
         }
         
-        setNewForm(formContainer, this._id);
+        setNewForm(formContainer, self._id);
     
         localStorage.setItem('allData', JSON.stringify(allData));
     }
