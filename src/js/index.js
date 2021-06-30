@@ -9,7 +9,7 @@ const container = document.querySelector('.container'),
       formContainer = document.querySelector('.formContainer'), //находим на странице тот самый контейнер для форм
       intermediateResultContainer = document.querySelector('.intermediateResultContainer'),
       title = document.querySelector('.title'),
-      downloadDocxFile = document.querySelector('.downloadFile');
+      downloadDocxFile = null;
 
 localStorage.clear();
 let allData = JSON.parse(localStorage.getItem('allData')) || {}; // Объект где будут храниться все будущие данные
@@ -111,6 +111,9 @@ function getForm(formId){
         if(currentSem === undefined){
             document.querySelector('.title').textContent = 'that it, check console';
             console.log(allData);
+            container.innerHTML += '<button class="downloadFile">download docx file</button>';
+            downloadDocxFile = document.querySelector('.downloadFile');
+            downloadDocxFile.addEventListener('click', (e) => generateDocxFile(allData));
             return;
         }
 
@@ -349,7 +352,7 @@ function getForm(formId){
         }
 
         setNewForm(formContainer, self._id + 1); // показ следующеей формы
-        intermediateResult(intermediateResultContainer, allData);
+        intermediateResult(container, allData);
 
         localStorage.setItem('allData', JSON.stringify(allData));
     }
@@ -366,5 +369,3 @@ function getForm(formId){
 
     return;
 }
-
-downloadDocxFile.addEventListener('click', (e) => generateDocxFile(allData));
