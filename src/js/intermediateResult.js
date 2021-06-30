@@ -52,40 +52,44 @@ export default function intermediateResult(container, data){
             <td>Консультации</td>
         </tr>
     `;
-
-	for (let i = 0; i < data.semesters.length; i++){
+    
+    data.semesters.forEach((semester, semesterIndex) => {
         table.append(createTableRow([
-            'Семестр',
-            i+1,
-            data.semesters[i].lecturesHour || '',
-            data.semesters[i].seminarsHour || '',
-            data.semesters[i].consultationsHour || '',
-            data.semesters[i].independentWorkHours || ''
+            '',
+            {text: 'Семестр', bold: true},
+            {text: semesterIndex + 1, bold: true},
+            {text: semester.lecturesHour || '', bold: true},
+            {text: semester.seminarsHour || '', bold: true},
+            {text: semester.consultationsHour || '', bold: true},
+            {text: semester.independentWorkHour || '', bold: true},
+            ''
         ]));
-		
-		for (let j = 0; j < data.semesters[i].topics.length; j++){
+
+        semester.topics.forEach((topic) => {
             table.append(createTableRow([
-                data.semesters[i].topics[j].topicName,
-                i+1,
-                data.semesters[i].topics[j].lecturesHour || '',
-                data.semesters[i].topics[j].seminarsHour || '',
-                data.semesters[i].topics[j].consultationsHour || '',
-                data.semesters[i].topics[j].independentWorkHours || ''
+                {text: semesterIndex, bold: true},
+                {text: topic.topicName, bold: true},
+                semesterIndex + 1,
+                {text: topic.lecturesHour || '', bold: true},
+                {text: topic.seminarsHour || '', bold: true},
+                {text: topic.consultationsHour || '', bold: true},
+                {text: topic.independentWorkHour || '', bold: true},
+                ''
             ]));
 
-			for (let k = 0; k < data.semesters[i].topics[j].subtopics.length; k++){
+            topic.subtopics.forEach((subtopic) => {
                 table.append(createTableRow([
-                    data.semesters[i].topics[j].subtopics[k].subtopicName,
-                    i+1,
-                    data.semesters[i].topics[j].subtopics[k].lectureHour || '',
-                    data.semesters[i].topics[j].subtopics[k].seminarsHour || '',
-                    data.semesters[i].topics[j].subtopics[k].consultationsHour || '',
-                    data.semesters[i].topics[j].subtopics[k].independentWorkHours || '',
-                    data.semesters[i].topics[j].subtopics[k].formsOfMonitoringProgress || ''
+                    subtopic.subtopicName,
+                    semesterIndex + 1,
+                    subtopic.lectureHour || '',
+                    subtopic.seminarsHour || '',
+                    subtopic.consultationsHour || '',
+                    subtopic.independentWorkHour || '',
+                    subtopic.formsOfMonitoringProgress || ''
                 ]));
-			}
-		}
-	}
+            });
+        });
+    });
 
 	inter.append(table);
 
@@ -95,7 +99,11 @@ export default function intermediateResult(container, data){
 function createTableRow(cellList){
     const row = document.createElement('tr');
     for(const cell of cellList){
-        row.append(createElement({tagName: 'td', textContent: cell}));
+        if(cell?.bold){
+            row.append(createElement({tagName: 'td', textContent: cell.text, styles: {fontWeight: 'bold'}}));
+        }else{
+            row.append(createElement({tagName: 'td', textContent: cell}));
+        }
     }
     return row;
 }

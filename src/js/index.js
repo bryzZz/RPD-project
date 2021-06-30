@@ -123,16 +123,16 @@ function getForm(formId){
                 legend: 'Семестр',
                 fieldsArr: [
                     {
-                        name: 'seminarsHour',
-                        text: 'Введите количество на семенары',
+                        name: 'lecturesHour',
+                        text: 'Введите количество на лекции',
                         inputType: 'number',
                         inputValue: '0',
                         placeholder: '',
                         required: true
                     },
                     {
-                        name: 'lecturesHour',
-                        text: 'Введите количество на лекции',
+                        name: 'seminarsHour',
+                        text: 'Введите количество на семенары',
                         inputType: 'number',
                         inputValue: '0',
                         placeholder: '',
@@ -188,16 +188,16 @@ function getForm(formId){
                             required: true
                         },
                         {
-                            name: 'seminarsHour',
-                            text: 'Введите количество на семенары',
+                            name: 'lecturesHour',
+                            text: 'Введите количество на лекции',
                             inputType: 'number',
                             inputValue: '0',
                             placeholder: '',
                             required: true
                         },
                         {
-                            name: 'lecturesHour',
-                            text: 'Введите количество на лекции',
+                            name: 'seminarsHour',
+                            text: 'Введите количество на семенары',
                             inputType: 'number',
                             inputValue: '0',
                             placeholder: '',
@@ -257,16 +257,16 @@ function getForm(formId){
                                 required: true
                             },
                             {
-                                name: 'seminarsHour',
-                                text: 'Введите количество на семенары',
+                                name: 'lecturesHour',
+                                text: 'Введите количество на лекции',
                                 inputType: 'number',
                                 inputValue: '0',
                                 placeholder: '',
                                 required: true
                             },
                             {
-                                name: 'lecturesHour',
-                                text: 'Введите количество на лекции',
+                                name: 'seminarsHour',
+                                text: 'Введите количество на семенары',
                                 inputType: 'number',
                                 inputValue: '0',
                                 placeholder: '',
@@ -341,7 +341,8 @@ function getForm(formId){
             }
             else if(self._id === 3){
                 currentTopic.complited = true;
-    
+                
+                intermediateResult(container, allData);
                 setNewForm(formContainer, self._id);
         
                 localStorage.setItem('allData', JSON.stringify(allData));
@@ -350,8 +351,8 @@ function getForm(formId){
             }
         }
 
-        setNewForm(formContainer, self._id + 1); // показ следующеей формы
         intermediateResult(container, allData);
+        setNewForm(formContainer, self._id + 1); // показ следующеей формы
 
         localStorage.setItem('allData', JSON.stringify(allData));
     }
@@ -360,7 +361,8 @@ function getForm(formId){
         for(const [key, value] of Object.entries(formData)){
             self._objectToSaveData[key] = value;
         }
-        
+
+        intermediateResult(container, allData);
         setNewForm(formContainer, self._id);
     
         localStorage.setItem('allData', JSON.stringify(allData));
