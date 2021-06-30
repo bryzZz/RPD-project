@@ -3,9 +3,11 @@
 import '../scss/style.scss';
 import Form from './Form';
 import intermediateResult from './intermediateResult';
+import generateDocxFile from './generateDocxFile';
 
-const formContainer = document.querySelector('.container'), //находим на странице тот самый контейнер для форм
-      title = document.querySelector('.title');
+const formContainer = document.querySelector('.formContainer'), //находим на странице тот самый контейнер для форм
+      title = document.querySelector('.title'),
+      downloadDocxFile = document.querySelector('.downloadFile');
 
 localStorage.clear();
 let allData = JSON.parse(localStorage.getItem('allData')) || {}; // Объект где будут храниться все будущие данные
@@ -244,7 +246,7 @@ function getForm(formId){
                     return new Form({
                         id: formId,
                         formClass: 'form',
-                        legend: 'Подтема',
+                        legend: 'Подтема темы \"' + currentTopic.topicName + '\"',
                         fieldsArr: [
                             {
                                 name: 'subtopicName',
@@ -368,3 +370,5 @@ function getForm(formId){
 
     return;
 }
+
+downloadDocxFile.addEventListener('click', (e) => generateDocxFile(allData));
