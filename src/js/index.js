@@ -8,8 +8,7 @@ import generateDocxFile from './generateDocxFile';
 const container = document.querySelector('.container'),
       formContainer = document.querySelector('.formContainer'), //находим на странице тот самый контейнер для форм
       intermediateResultContainer = document.querySelector('.intermediateResultContainer'),
-      title = document.querySelector('.title'),
-      downloadDocxFile = null;
+      title = document.querySelector('.title');
 
 localStorage.clear();
 let allData = JSON.parse(localStorage.getItem('allData')) || {}; // Объект где будут храниться все будущие данные
@@ -112,7 +111,7 @@ function getForm(formId){
             document.querySelector('.title').textContent = 'that it, check console';
             console.log(allData);
             container.innerHTML += '<button class="downloadFile">download docx file</button>';
-            downloadDocxFile = document.querySelector('.downloadFile');
+            const downloadDocxFile = document.querySelector('.downloadFile');
             downloadDocxFile.addEventListener('click', (e) => generateDocxFile(allData));
             return;
         }

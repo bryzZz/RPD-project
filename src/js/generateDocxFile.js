@@ -25,11 +25,11 @@ export default function generateDocxFile(allData){
         ]
     });
 
-    // console.log(doc);
+    console.log(doc);
     
-    // Packer.toBlob(doc).then((blob) => {
-    //     console.log(blob);
-    //     saveAs(blob, "example.docx");
-    //     console.log("Document created successfully");
-    // });
+    Packer.toBlob(doc).then((blob) => {
+        console.log(blob);
+        saveAs(blob, "example.docx");
+        console.log("Document created successfully");
+    });
 }
