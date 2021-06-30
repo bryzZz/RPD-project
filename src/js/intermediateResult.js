@@ -1,3 +1,5 @@
+import {createElement} from './utils.js';
+
 export default function intermediateResult(container, data){
     let inter = container.querySelector('.intermediateResultContainer') || createElement({tagName: 'div', className: 'intermediateResultContainer'});
     inter.innerHTML = '';
@@ -34,47 +36,35 @@ export default function intermediateResult(container, data){
     let table = document.createElement('table');
 		
 	for (let i = 0; i < data.semesters.length; i++){
-		let sem_line = document.createElement('tr');
-
-        sem_line.append(
-            createElement({tagName: 'td', textContent: 'Семестр'}),
-            createElement({tagName: 'td', textContent: i+1}),
-            createElement({tagName: 'td', textContent: data.semesters[i].lecturesHour || ''}),
-            createElement({tagName: 'td', textContent: data.semesters[i].seminarsHour || ''}),
-            createElement({tagName: 'td', textContent: data.semesters[i].consultationsHour || ''}),
-            createElement({tagName: 'td', textContent: data.semesters[i].independentWorkHours || ''}),
-        );
-
-        table.append(sem_line);
+        table.append(createRow([
+            'Семестр',
+            i+1,
+            data.semesters[i].lecturesHour || '',
+            data.semesters[i].seminarsHour || '',
+            data.semesters[i].consultationsHour || '',
+            data.semesters[i].independentWorkHours || ''
+        ]));
 		
 		for (let j = 0; j < data.semesters[i].topics.length; j++){
-			let sem_top_line = document.createElement('tr');
-
-            sem_top_line.append(
-                createElement({tagName: 'td', textContent: data.semesters[i].topics[j].topicName}),
-                createElement({tagName: 'td', textContent: i+1}),
-                createElement({tagName: 'td', textContent: data.semesters[i].topics[j].lecturesHour || ''}),
-                createElement({tagName: 'td', textContent: data.semesters[i].topics[j].seminarsHour || ''}),
-                createElement({tagName: 'td', textContent: data.semesters[i].topics[j].consultationsHour || ''}),
-                createElement({tagName: 'td', textContent: data.semesters[i].topics[j].independentWorkHours || ''}),
-            );
-			
-			table.append(sem_top_line);
+            table.append(createRow([
+                data.semesters[i].topics[j].topicName,
+                i+1,
+                data.semesters[i].topics[j].lecturesHour || '',
+                data.semesters[i].topics[j].seminarsHour || '',
+                data.semesters[i].topics[j].consultationsHour || '',
+                data.semesters[i].topics[j].independentWorkHours || ''
+            ]));
 
 			for (let k = 0; k < data.semesters[i].topics[j].subtopics.length; k++){
-				let sem_sub_line = document.createElement('td');
-
-                sem_sub_line.append(
-                    createElement({tagName: 'td', textContent: data.semesters[i].topics[j].subtopics[k].subtopicName}),
-                    createElement({tagName: 'td', textContent: i+1}),
-                    createElement({tagName: 'td', textContent: data.semesters[i].topics[j].subtopics[k].lectureHour || ''}),
-                    createElement({tagName: 'td', textContent: data.semesters[i].topics[j].subtopics[k].seminarsHour || ''}),
-                    createElement({tagName: 'td', textContent: data.semesters[i].topics[j].subtopics[k].consultationsHour || ''}),
-                    createElement({tagName: 'td', textContent: data.semesters[i].topics[j].subtopics[k].independentWorkHours || ''}),
-                    createElement({tagName: 'td', textContent: data.semesters[i].topics[j].subtopics[k].formsOfMonitoringProgress || ''}),
-                );
-				
-				table.append(sem_sub_line);
+                table.append(createRow([
+                    data.semesters[i].topics[j].subtopics[k].subtopicName,
+                    i+1,
+                    data.semesters[i].topics[j].subtopics[k].lectureHour || '',
+                    data.semesters[i].topics[j].subtopics[k].seminarsHour || '',
+                    data.semesters[i].topics[j].subtopics[k].consultationsHour || '',
+                    data.semesters[i].topics[j].subtopics[k].independentWorkHours || '',
+                    data.semesters[i].topics[j].subtopics[k].formsOfMonitoringProgress || ''
+                ]));
 			}
 		}
 	}
@@ -84,25 +74,10 @@ export default function intermediateResult(container, data){
     container.append(inter);
 }
 
-function createElement({tagName, className, textContent, attributes, styles}){
-    const element = document.createElement(tagName);
-    if(textContent) {
-        element.textContent = textContent;
+function createRow(cellList){
+    const row = document.createElement('tr');
+    for(const cell of cellList){
+        row.append(createElement({tagName: 'td', textContent: cell}));
     }
-    if(className){
-        if(Array.isArray(className)){
-            element.classList.add(...className);
-        }else{
-            element.classList.add(className);
-        }
-    }
-    if(attributes){
-        for(const [key, value] of Object.entries(attributes)){
-            element.setAttribute(key, value);
-        }
-    }
-    if(styles){
-        Object.assign(element.style, styles);
-    }
-    return element;
+    return row;
 }

@@ -1,3 +1,5 @@
+import {createElement} from './utils.js';
+
 export default class Form{
     constructor({id, formClass, legend, fieldsArr, data, objectToSaveData, compliteFunction, againFunction, buttons}){
         this._id = id;
@@ -10,13 +12,13 @@ export default class Form{
     }
 
     getForm(){
-        const form = this._createElement({tagName: 'form', className: this._formClass});
+        const form = createElement({tagName: 'form', className: this._formClass});
 
-        const formFields = this._createElement({tagName: 'div', className: this._formClass + '__fields'});
-        const formNavigation = this._createElement({tagName: 'div', className: this._formClass + '__navigation'});
+        const formFields = createElement({tagName: 'div', className: this._formClass + '__fields'});
+        const formNavigation = createElement({tagName: 'div', className: this._formClass + '__navigation'});
 
         //надпись над формой
-        const legend = this._createElement({tagName: 'legend', textContent: `Форма №${this._id + 1} - ${this._legend}`});
+        const legend = createElement({tagName: 'legend', textContent: `Форма №${this._id + 1} - ${this._legend}`});
         formFields.append(legend);
         
         //поля формы
@@ -24,14 +26,14 @@ export default class Form{
             // вытаскиваем переменные из элемента
             let {name, text, inputType, inputValue, datalist, placeholder, required} = this._fieldsArr[i];
 
-            const formItem = this._createElement({tagName: 'div', className: [this._formClass + '__field', name]});
+            const formItem = createElement({tagName: 'div', className: [this._formClass + '__field', name]});
 
-            const p = this._createElement({
+            const p = createElement({
                 tagName: 'p', 
                 className: this._formClass + '__field-text', 
                 textContent: text + ':'
             });
-            const input = this._createElement({
+            const input = createElement({
                 tagName: 'input', 
                 className: this._formClass + '__field-input',
                 attributes: {
@@ -47,7 +49,7 @@ export default class Form{
 
             // если для элемента есть варианты выбора то вставялем и их в вёрстку
             if(datalist){
-                const list = this._createElement({tagName: 'datalist', attributes: {id: name}});
+                const list = createElement({tagName: 'datalist', attributes: {id: name}});
 
                 input.setAttribute('list', name);
 
@@ -61,15 +63,15 @@ export default class Form{
 
         // добавить инпут файла если форма первая
         if(this._id === 0){
-            const formField = this._createElement({tagName: 'div', className: this._formClass + '__field'});
-            formField.append(this._createElement({tagName: 'input', attributes: {type: 'file'}}));
+            const formField = createElement({tagName: 'div', className: this._formClass + '__field'});
+            formField.append(createElement({tagName: 'input', attributes: {type: 'file'}}));
 
             formFields.append(formField);
         }
 
         // добавление кнопочек
         for(const [name, func] of this._buttons){
-            const btn = this._createElement({tagName: 'button', textContent: name});
+            const btn = createElement({tagName: 'button', textContent: name});
             btn.addEventListener('click', (e) => func(e, Object.fromEntries(new FormData(form)), this));
             formNavigation.append(btn);
         }
@@ -79,23 +81,23 @@ export default class Form{
         return form;
     }
 
-    _createElement({tagName, className, textContent, attributes}){
-        const element = document.createElement(tagName);
-        if(textContent) {
-            element.textContent = textContent;
-        }
-        if(className){
-            if(Array.isArray(className)){
-                element.classList.add(...className);
-            }else{
-                element.classList.add(className);
-            }
-        }
-        if(attributes){
-            for(const [key, value] of Object.entries(attributes)){
-                element.setAttribute(key, value);
-            }
-        }
-        return element;
-    }
+    // _createElement({tagName, className, textContent, attributes}){
+    //     const element = document.createElement(tagName);
+    //     if(textContent) {
+    //         element.textContent = textContent;
+    //     }
+    //     if(className){
+    //         if(Array.isArray(className)){
+    //             element.classList.add(...className);
+    //         }else{
+    //             element.classList.add(className);
+    //         }
+    //     }
+    //     if(attributes){
+    //         for(const [key, value] of Object.entries(attributes)){
+    //             element.setAttribute(key, value);
+    //         }
+    //     }
+    //     return element;
+    // }
 }
