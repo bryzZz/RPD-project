@@ -5,7 +5,9 @@ import Form from './Form';
 import intermediateResult from './intermediateResult';
 import generateDocxFile from './generateDocxFile';
 
-const formContainer = document.querySelector('.formContainer'), //находим на странице тот самый контейнер для форм
+const container = document.querySelector('.container'),
+      formContainer = document.querySelector('.formContainer'), //находим на странице тот самый контейнер для форм
+      intermediateResultContainer = document.querySelector('.intermediateResultContainer'),
       title = document.querySelector('.title'),
       downloadDocxFile = document.querySelector('.downloadFile');
 
@@ -87,7 +89,6 @@ function getForm(formId){
             ],
             data: allData,
             objectToSaveData: allData,
-            // compliteFunction: submit,
             buttons: [['Далее', submit]]
         }).getForm();
     }else{
@@ -154,7 +155,6 @@ function getForm(formId){
                 ],
                 data: currentSem,
                 objectToSaveData: currentSem,
-                // compliteFunction: submit,
                 buttons: [['Далее', submit]]
             }).getForm();
         }else{
@@ -220,8 +220,6 @@ function getForm(formId){
                     ],
                     data: currentTopic,
                     objectToSaveData: currentTopic,
-                    // compliteFunction: submit,
-                    // againFunction: showOneMore,
                     buttons: [['Далее', showOneMore], ['Закончить', submit]]
                 }).getForm();
             }else{
@@ -299,8 +297,6 @@ function getForm(formId){
                         ],
                         data: currentSubtopics,
                         objectToSaveData: currentSubtopics,
-                        // compliteFunction: submit,
-                        // againFunction: showOneMore,
                         buttons: [['Далее', showOneMore], ['Закончить', submit]]
                     }).getForm();
                 }
@@ -353,7 +349,7 @@ function getForm(formId){
         }
 
         setNewForm(formContainer, self._id + 1); // показ следующеей формы
-        intermediateResult(formContainer, allData);
+        intermediateResult(intermediateResultContainer, allData);
 
         localStorage.setItem('allData', JSON.stringify(allData));
     }
