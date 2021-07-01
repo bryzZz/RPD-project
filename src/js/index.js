@@ -7,7 +7,6 @@ import generateDocxFile from './generateDocxFile';
 
 const container = document.querySelector('.container'),
       formContainer = document.querySelector('.formContainer'), //находим на странице тот самый контейнер для форм
-      intermediateResultContainer = document.querySelector('.intermediateResultContainer'),
       title = document.querySelector('.title');
 
 localStorage.clear();
@@ -20,6 +19,7 @@ setNewForm(formContainer, 0); // добавляем в этот контейне
 function setNewForm(container, formId){
     container.innerHTML = ''; // очистка внутренностей контейнера
     container.append(getForm(formId)); // добавление туда новой формы
+    formContainer.querySelectorAll('.form__field-input')[0].select();
 }
 
 // функция которая возвращает форму по её id
@@ -41,7 +41,7 @@ function getForm(formId){
                     inputType: 'text',
                     inputValue: 'ЯРСК',
                     placeholder: 'ЯРСК',
-                    required: true
+                    correctRegExp: /^([a-zа-яё\s]+)$/i
                 },
                 {
                     name: 'laborIntensity',
@@ -308,6 +308,10 @@ function getForm(formId){
 
     function submit (e, formData, self) {
         e.preventDefault();
+
+        if(self._isIncorrect){
+            return;
+        }
 
         for(const [key, value] of Object.entries(formData)){
             self._objectToSaveData[key] = value;

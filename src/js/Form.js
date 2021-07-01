@@ -9,6 +9,8 @@ export default class Form{
         this._data = data;
         this._objectToSaveData = objectToSaveData;
         this._buttons = buttons;
+
+        this._isIncorrect = false;
     }
 
     getForm(){
@@ -24,7 +26,7 @@ export default class Form{
         //поля формы
         for(let i = 0; i < this._fieldsArr.length; i++){ // цикл переберёт все переданные элементы
             // вытаскиваем переменные из элемента
-            let {name, text, inputType, inputValue, datalist, placeholder, required} = this._fieldsArr[i];
+            let {name, text, inputType, inputValue, datalist, placeholder, correctRegExp} = this._fieldsArr[i];
 
             const formItem = createElement({tagName: 'div', className: [this._formClass + '__field', name]});
 
@@ -41,10 +43,20 @@ export default class Form{
                     name: name,
                     tabindex: i+1,
                     placeholder: placeholder,
-                    required: required,
                     value: this._data[name] ? this._data[name] : inputValue
                 }
             });
+
+            input.addEventListener('input', (e) => {
+                if(!correctRegExp.test(e.target.value)){
+                    e.target.classList.add(this._formClass + '__field-input--incorrect');
+                    this._isIncorrect = true;
+                }else{
+                    e.target.classList.remove(this._formClass + '__field-input--incorrect');
+                    this._isIncorrect = false;
+                }
+            });
+
             formItem.append(p, input);
 
             // если для элемента есть варианты выбора то вставялем и их в вёрстку
@@ -80,24 +92,4 @@ export default class Form{
 
         return form;
     }
-
-    // _createElement({tagName, className, textContent, attributes}){
-    //     const element = document.createElement(tagName);
-    //     if(textContent) {
-    //         element.textContent = textContent;
-    //     }
-    //     if(className){
-    //         if(Array.isArray(className)){
-    //             element.classList.add(...className);
-    //         }else{
-    //             element.classList.add(className);
-    //         }
-    //     }
-    //     if(attributes){
-    //         for(const [key, value] of Object.entries(attributes)){
-    //             element.setAttribute(key, value);
-    //         }
-    //     }
-    //     return element;
-    // }
 }
