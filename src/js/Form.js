@@ -84,7 +84,23 @@ export default class Form{
         // добавление кнопочек
         for(const [name, func] of this._buttons){
             const btn = createElement({tagName: 'button', textContent: name});
-            btn.addEventListener('click', (e) => func(e, Object.fromEntries(new FormData(form)), this));
+            let validateForm = (e) => {
+                e.preventDefault();
+
+                for(let i = 0; i < this._fieldsArr.length; i++){
+                    const input = form.querySelectorAll('.' + this._formClass + '__field-input')[i];
+                    const {correctRegExp} = this._fieldsArr[i];
+                    if(!correctRegExp.test(input.value)){
+                        input.classList.add(this._formClass + '__field-input--incorrect');
+                        return;
+                    }else{
+                        input.classList.remove(this._formClass + '__field-input--incorrect');
+                    }
+                }
+                return func(Object.fromEntries(new FormData(form)), this);
+            }
+
+            btn.addEventListener('click', (e) => validateForm(e));
             formNavigation.append(btn);
         }
 

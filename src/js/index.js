@@ -41,7 +41,7 @@ function getForm(formId){
                     inputType: 'text',
                     inputValue: 'ЯРСК',
                     placeholder: 'ЯРСК',
-                    correctRegExp: /^([a-zа-яё\s]+)$/i
+                    correctRegExp: /^([a-zа-яё.\s]+)$/i
                 },
                 {
                     name: 'laborIntensity',
@@ -74,7 +74,7 @@ function getForm(formId){
                     inputValue: 'Экз.',
                     datalist: ['Экз.', 'Зачёт'],
                     placeholder: '',
-                    correctRegExp: /^([a-zа-яё\s]+)$/i
+                    correctRegExp: /^([a-zа-яё.\s]+)$/i
                 },
                 {
                     name: 'numberOfSemesters',
@@ -185,7 +185,7 @@ function getForm(formId){
                             inputType: 'text',
                             inputValue: '',
                             placeholder: '',
-                            correctRegExp: /^([a-zа-яё\s]+)$/i
+                            correctRegExp: /^([a-zа-яё.\-\s]+)$/i
                         },
                         {
                             name: 'lecturesHour',
@@ -254,7 +254,7 @@ function getForm(formId){
                                 inputType: 'text',
                                 inputValue: '',
                                 placeholder: '',
-                                correctRegExp: /^([a-zа-яё\s]+)$/i
+                                correctRegExp: /^([a-zа-яё.\-\s]+)$/i
                             },
                             {
                                 name: 'lecturesHour',
@@ -294,6 +294,7 @@ function getForm(formId){
                                 inputType: 'text',
                                 inputValue: '',
                                 placeholder: '',
+                                correctRegExp: /^([a-zа-яё0-9,\s]+)$/i
                             }
                         ],
                         data: currentSubtopics,
@@ -305,13 +306,7 @@ function getForm(formId){
         }
     }
 
-    function submit (e, formData, self) {
-        e.preventDefault();
-
-        if(self._isIncorrect){
-            return;
-        }
-
+    function submit (formData, self) {
         for(const [key, value] of Object.entries(formData)){
             self._objectToSaveData[key] = value;
         }
@@ -360,11 +355,7 @@ function getForm(formId){
         localStorage.setItem('allData', JSON.stringify(allData));
     }
 
-    function showOneMore (e, formData, self){
-        if(self._isIncorrect){
-            return;
-        }
-
+    function showOneMore (formData, self){
         for(const [key, value] of Object.entries(formData)){
             self._objectToSaveData[key] = value;
         }
