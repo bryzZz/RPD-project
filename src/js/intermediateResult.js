@@ -4,7 +4,7 @@ export default function intermediateResult(container, data){
     let inter = container.querySelector('.intermediateResultContainer') || createElement({tagName: 'div', className: 'intermediateResultContainer'});
     inter.innerHTML = '';
 
-    //RPD IV header
+    //main header
     inter.append(
         createElement({
             tagName: 'h1',
@@ -31,11 +31,11 @@ export default function intermediateResult(container, data){
             }
         }),
     );
-
-    let table = document.createElement('table');
     
+    //first table
+    let table1 = document.createElement('table');
     // first table header
-    table.innerHTML += `
+    table1.innerHTML += `
         <thead>
             <tr>
                 <td rowspan="3">п/п</td>
@@ -56,12 +56,10 @@ export default function intermediateResult(container, data){
         </thead>
         <tbody></tbody>
     `;
-
-    const tbody = table.querySelector('tbody');
-    
+    const tbody1 = table1.querySelector('tbody');
     //first table fields
     data.semesters.forEach((semester, semesterIndex) => {
-        tbody.append(createTableRow([
+        tbody1.append(createTableRow([
             '',
             {text: 'Семестр', bold: true},
             {text: semesterIndex + 1, bold: true},
@@ -73,7 +71,7 @@ export default function intermediateResult(container, data){
         ]));
 
         semester.topics.forEach((topic, topicIndex) => {
-            tbody.append(createTableRow([
+            tbody1.append(createTableRow([
                 {text: topicIndex + 1, bold: true},
                 {text: topic.topicName, bold: true},
                 semesterIndex + 1,
@@ -85,7 +83,7 @@ export default function intermediateResult(container, data){
             ]));
 
             topic.subtopics.forEach((subtopic, subtopicIndex) => {
-                tbody.append(createTableRow([
+                tbody1.append(createTableRow([
                     `${topicIndex+1}.${subtopicIndex+1}`,
                     subtopic.subtopicName,
                     semesterIndex + 1,
@@ -98,9 +96,8 @@ export default function intermediateResult(container, data){
             });
         });
     });
-
-    // table footer
-    table.innerHTML += `
+    // first table footer
+    table1.innerHTML += `
         <tfoot>
             <tr>
                 <td colspan="2" style="font-weight: bold;">Итого часов</td>
@@ -113,8 +110,53 @@ export default function intermediateResult(container, data){
             </tr>
         </tfoot>
     `;
+    inter.append(table1);
 
-	inter.append(table);
+    inter.append(createElement({
+        tagName: 'h2',
+        textContent: '4.3 Содержание учебного материала',
+        styles: {
+            fontSize: '12pt',
+            fontWeight: 'bold'
+        }
+    }));
+    let table3 = document.createElement('table');
+    let allTopicsNames = '';
+    data.semesters.forEach(semester => {
+        semester.topics.forEach((topic, topicIndex) => {
+            allTopicsNames += `${topic.topicName}${(topicIndex === semester.topics.length - 1) ? '' : ', '}`;
+        });
+    });
+    let allformsOfMonitoringProgress = '';
+    data.semesters.forEach(semester => {
+        semester.topics.forEach((topic) => {
+            topic.subtopics.forEach((subtopic, subtopicIndex) => {
+                allformsOfMonitoringProgress += `${subtopic.formsOfMonitoringProgress}${(subtopicIndex === topic.subtopics.length - 1) ? '' : ', '}`;
+            });
+        });
+    });
+    table3.innerHTML += `
+        <tbody>
+            <tr>
+                <td width="30%">Трудоемкость дисциплины (з.е.)</td>
+                <td>${data.laborIntensity || ''}</td>
+            </tr>
+            <tr>
+                <td>Наименование основных разделов (модулей)</td>
+                <td>${allTopicsNames || ''}</td>
+            </tr>
+            <tr>
+                <td>Формы текущего контроля</td>
+                <td>${allformsOfMonitoringProgress || ''}</td>
+            </tr>
+            <tr>
+                <td>ФФорма промежуточной аттестации</td>
+                <td>${data.finalExamination || ''}</td>
+            </tr>
+        </tbody>
+    `;
+    inter.append(table3);
+
 
     container.append(inter);
 }
