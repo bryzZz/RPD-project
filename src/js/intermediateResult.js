@@ -34,27 +34,32 @@ export default function intermediateResult(container, data){
 
     let table = document.createElement('table');
     
+    // first table header
     table.innerHTML += `
-        <tr>
-            <td rowspan="3">п/п</td>
-            <td rowspan="3">Раздел дисциплины/темы</td>
-            <td rowspan="3">Семестр</td>
-            <td colspan="4">Виды учебной работы, включая самостоятельную работу обучающихся и трудоемкость(в часах)</td>
-            <td rowspan="3">Формы текущего контроля успеваемости; Форма промежуточной аттестации(по семестрам)</td>
-        </tr>
-        <tr>
-            <td colspan="3">Контактная работа преподавателя с обучающимися</td>
-            <td rowspan="2">Самостоятельная работа</td>
-        </tr>
-        <tr>
-            <td>Лекции</td>
-            <td>Семинарские (практические занятия)</td>
-            <td>Консультации</td>
-        </tr>
+        <thead>
+            <tr>
+                <td rowspan="3">п/п</td>
+                <td rowspan="3">Раздел дисциплины/темы</td>
+                <td rowspan="3">Семестр</td>
+                <td colspan="4">Виды учебной работы, включая самостоятельную работу обучающихся и трудоемкость(в часах)</td>
+                <td rowspan="3">Формы текущего контроля успеваемости; Форма промежуточной аттестации(по семестрам)</td>
+            </tr>
+            <tr>
+                <td colspan="3">Контактная работа преподавателя с обучающимися</td>
+                <td rowspan="2">Самостоятельная работа</td>
+            </tr>
+            <tr>
+                <td>Лекции</td>
+                <td>Семинарские (практические занятия)</td>
+                <td>Консультации</td>
+            </tr>
+        </thead>
+        <tbody></tbody>
     `;
 
     const tbody = table.querySelector('tbody');
     
+    //first table fields
     data.semesters.forEach((semester, semesterIndex) => {
         tbody.append(createTableRow([
             '',
@@ -93,6 +98,21 @@ export default function intermediateResult(container, data){
             });
         });
     });
+
+    // table footer
+    table.innerHTML += `
+        <tfoot>
+            <tr>
+                <td colspan="2" style="font-weight: bold;">Итого часов</td>
+                <td style="font-weight: bold;"></td>
+                <td style="font-weight: bold;">${data.semesters.reduce((accum, item) => accum + +(item.lecturesHour ? item.lecturesHour : '0'), 0)}</td>
+                <td style="font-weight: bold;">${data.semesters.reduce((accum, item) => accum + +(item.lecturesHour ? item.seminarsHour : '0'), 0)}</td>
+                <td style="font-weight: bold;">${data.semesters.reduce((accum, item) => accum + +(item.lecturesHour ? item.consultationsHour : '0'), 0)}</td>
+                <td style="font-weight: bold;">${data.semesters.reduce((accum, item) => accum + +(item.lecturesHour ? item.independentWorkHour : '0'), 0)}</td>
+                <td style="font-weight: bold;">${data.examHours}</td>
+            </tr>
+        </tfoot>
+    `;
 
 	inter.append(table);
 
