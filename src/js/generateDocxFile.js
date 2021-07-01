@@ -93,7 +93,10 @@ export default function generateDocxFile(allData){
 					children: [
 						new TableCell({
 							children: [
-								new Paragraph(`${j+1}` + "." + `${k+1}`),
+								new Paragraph({
+								text: `${j+1}` + "." + `${k+1}`,
+								alignment: AlignmentType.CENTER,
+								}),
 							],
 						}),
 						new TableCell({
@@ -290,4 +293,3 @@ export default function generateDocxFile(allData){
         console.log("Document created successfully");
     });
 }
-
