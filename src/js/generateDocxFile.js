@@ -2,7 +2,144 @@ import { saveAs } from 'file-saver';
 import {Document, Packer, Paragraph, TextRun, Header, AlignmentType, VerticalAlign, WidthType, Table, TableRow, TableCell} from "docx";
 
 export default function generateDocxFile(allData){
-   let table = new Table({
+	
+	const tableRows = [];
+	for (let i = 0; i < allData.semesters.length; i++){/*доделывается цикл*/
+		tableRows.push(new TableRow({
+			children: [
+				new TableCell({
+					children: [],
+				}),
+				new TableCell({
+					children: [
+						new Paragraph("Семестр"),
+					]
+				}),
+				new TableCell({
+					children: [
+						new Paragraph(`${i+1}`),
+					]
+				}),
+				new TableCell({
+					children: [
+						new Paragraph(`${allData.semesters[i].lecturesHour}`)
+					]
+				}),
+				new TableCell({
+					children: [
+						new Paragraph(`${allData.semesters[i].seminarsHour}`)
+					]
+				}),
+				new TableCell({
+					children: [
+						new Paragraph(`${allData.semesters[i].consultationsHour}`)
+					]
+				}),
+				new TableCell({
+					children: [
+						new Paragraph(`${allData.semesters[i].independentWorkHour}`)
+					]
+				}),
+				new TableCell({
+					children: []
+				}),
+			]
+		}));
+		for (let j = 0; j < allData.semesters[i].topics.length; j++){
+			tableRows.push(new TableRow({
+				children: [
+					new TableCell({
+						children: [
+							new Paragraph(`${j+1}`)
+						],
+					}),
+					new TableCell({
+						children: [
+							new Paragraph(`${allData.semesters[i].topics[j].topicName}`),
+						]
+					}),
+					new TableCell({
+						children: [
+							new Paragraph(`${i+1}`),
+						]
+					}),
+					new TableCell({
+						children: [
+							new Paragraph(`${allData.semesters[i].topics[j].lecturesHour}`)
+						]
+					}),
+					new TableCell({
+						children: [
+							new Paragraph(`${allData.semesters[i].topics[j].seminarsHour}`)
+						]
+					}),
+					new TableCell({
+						children: [
+							new Paragraph(`${allData.semesters[i].topics[j].consultationsHour}`)
+						]
+					}),
+					new TableCell({
+						children: [
+							new Paragraph(`${allData.semesters[i].topics[j].independentWorkHour}`)
+						]
+					}),
+					new TableCell({
+						children: []
+					}),
+				]
+			})); 
+			for (let k = 0; k < allData.semesters[i].topics[j].subtopics.length; k++){
+				tableRows.push(new TableRow({
+					children: [
+						new TableCell({
+							children: [
+								new Paragraph({
+								text: `${j+1}` + "." + `${k+1}`,
+								alignment: AlignmentType.CENTER,
+								}),
+							],
+						}),
+						new TableCell({
+							children: [
+								new Paragraph(`${allData.semesters[i].topics[j].subtopics[k].subtopicName}`),
+							],
+						}),
+						new TableCell({
+							children: [
+								new Paragraph(`${i+1}`),
+							],
+						}),
+						new TableCell({
+							children: [
+								new Paragraph(`${allData.semesters[i].topics[j].subtopics[k].lecturesHour}`),
+							],
+						}),
+						new TableCell({
+							children: [
+								new Paragraph(`${allData.semesters[i].topics[j].subtopics[k].seminarsHour}`),
+							],
+						}),
+						new TableCell({
+							children: [
+								new Paragraph(`${allData.semesters[i].topics[j].subtopics[k].consultationsHour}`),
+							],
+						}),
+						new TableCell({
+							children: [
+								new Paragraph(`${allData.semesters[i].topics[j].subtopics[k].independentWorkHour}`),
+							],
+						}),
+						new TableCell({
+							children: [
+								new Paragraph(`${allData.semesters[i].topics[j].subtopics[k].formsOfMonitoringProgress}`),
+							]
+					}),
+				]
+				}));
+			}
+		}
+	}
+	let table = new Table({
 		width: {
 			size: 90,
 			type: WidthType.PERCENTAGE,
@@ -86,6 +223,7 @@ export default function generateDocxFile(allData){
 					}),
 				]
 			}),
+			...tableRows,
 		]
 	})
           
@@ -145,50 +283,7 @@ export default function generateDocxFile(allData){
 			]
         }]
     });
-
-	
-	/*for (let i = 0; i < allData.semesters.length; i++){
-		table.rows.append(new TableRow({
-			children: [
-				new TableCell({
-					children: [],
-				}),
-				new TableCell({
-					children: [
-						new Paragraph("Семестр"),
-					]
-				}),
-				new TableCell({
-					children: [
-						new Paragraph(`${i+1}`),
-					]
-				}),
-				new TableCell({
-					children: [
-						new Paragraph(`${allData.semesters[i].lecturesHour}`)
-					]
-				}),
-				new TableCell({
-					children: [
-						new Paragraph(`${allData.semesters[i].seminarsHour}`)
-					]
-				}),
-				new TableCell({
-					children: [
-						new Paragraph(`${allData.semesters[i].consultationsHour}`)
-					]
-				}),
-				new TableCell({
-					children: [
-						new Paragraph(`${allData.semesters[i].independentWorkHour}`)
-					]
-				}),
-				new TableCell({
-					children: []
-				}),
-			]
-		}))
-	}*/
+ 
 
     console.log(doc);
     
