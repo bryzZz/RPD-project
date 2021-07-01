@@ -52,9 +52,11 @@ export default function intermediateResult(container, data){
             <td>Консультации</td>
         </tr>
     `;
+
+    const tbody = table.querySelector('tbody');
     
     data.semesters.forEach((semester, semesterIndex) => {
-        table.append(createTableRow([
+        tbody.append(createTableRow([
             '',
             {text: 'Семестр', bold: true},
             {text: semesterIndex + 1, bold: true},
@@ -65,9 +67,9 @@ export default function intermediateResult(container, data){
             ''
         ]));
 
-        semester.topics.forEach((topic) => {
-            table.append(createTableRow([
-                {text: semesterIndex, bold: true},
+        semester.topics.forEach((topic, topicIndex) => {
+            tbody.append(createTableRow([
+                {text: topicIndex + 1, bold: true},
                 {text: topic.topicName, bold: true},
                 semesterIndex + 1,
                 {text: topic.lecturesHour || '', bold: true},
@@ -77,8 +79,9 @@ export default function intermediateResult(container, data){
                 ''
             ]));
 
-            topic.subtopics.forEach((subtopic) => {
-                table.append(createTableRow([
+            topic.subtopics.forEach((subtopic, subtopicIndex) => {
+                tbody.append(createTableRow([
+                    `${topicIndex+1}.${subtopicIndex+1}`,
                     subtopic.subtopicName,
                     semesterIndex + 1,
                     subtopic.lectureHour || '',
@@ -99,7 +102,7 @@ export default function intermediateResult(container, data){
 function createTableRow(cellList){
     const row = document.createElement('tr');
     for(const cell of cellList){
-        if(cell?.bold){
+        if(cell instanceof Object){
             row.append(createElement({tagName: 'td', textContent: cell.text, styles: {fontWeight: 'bold'}}));
         }else{
             row.append(createElement({tagName: 'td', textContent: cell}));
