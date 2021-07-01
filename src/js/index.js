@@ -128,15 +128,15 @@ function getForm(formId){
                         inputType: 'number',
                         inputValue: '0',
                         placeholder: '',
-                        required: true
+                        correctRegExp: /^[0-9]+$/
                     },
                     {
                         name: 'seminarsHour',
-                        text: 'Введите количество на семенары',
+                        text: 'Введите количество на семинары',
                         inputType: 'number',
                         inputValue: '0',
                         placeholder: '',
-                        required: true
+                        correctRegExp: /^[0-9]+$/
                     },
                     {
                         name: 'consultationsHour',
@@ -144,7 +144,7 @@ function getForm(formId){
                         inputType: 'number',
                         inputValue: '0',
                         placeholder: '',
-                        required: true
+                        correctRegExp: /^[0-9]+$/
                     },
                     {
                         name: 'independentWorkHour',
@@ -152,7 +152,7 @@ function getForm(formId){
                         inputType: 'number',
                         inputValue: '0',
                         placeholder: '',
-                        required: true
+                        correctRegExp: /^[0-9]+$/
                     }
                 ],
                 data: currentSem,
@@ -177,15 +177,15 @@ function getForm(formId){
                 return new Form({
                     id: formId,
                     formClass: 'form',
-                    legend: 'Тема',
+                    legend: 'Раздел',
                     fieldsArr: [
                         {
                             name: 'topicName',
-                            text: 'Введите название темы',
+                            text: 'Введите название раздела',
                             inputType: 'text',
                             inputValue: '',
                             placeholder: '',
-                            required: true
+                            correctRegExp: /^([a-zа-яё\s]+)$/i
                         },
                         {
                             name: 'lecturesHour',
@@ -193,15 +193,15 @@ function getForm(formId){
                             inputType: 'number',
                             inputValue: '0',
                             placeholder: '',
-                            required: true
+                            correctRegExp: /^[0-9]+$/
                         },
                         {
                             name: 'seminarsHour',
-                            text: 'Введите количество на семенары',
+                            text: 'Введите количество на семинары',
                             inputType: 'number',
                             inputValue: '0',
                             placeholder: '',
-                            required: true
+                            correctRegExp: /^[0-9]+$/
                         },
                         {
                             name: 'consultationsHour',
@@ -209,7 +209,7 @@ function getForm(formId){
                             inputType: 'number',
                             inputValue: '0',
                             placeholder: '',
-                            required: true
+                            correctRegExp: /^[0-9]+$/
                         },
                         {
                             name: 'independentWorkHour',
@@ -217,7 +217,7 @@ function getForm(formId){
                             inputType: 'number',
                             inputValue: '0',
                             placeholder: '',
-                            required: true
+                            correctRegExp: /^[0-9]+$/
                         }
                     ],
                     data: currentTopic,
@@ -246,15 +246,15 @@ function getForm(formId){
                     return new Form({
                         id: formId,
                         formClass: 'form',
-                        legend: 'Подтема темы \"' + currentTopic.topicName + '\"',
+                        legend: 'Тема раздела \"' + currentTopic.topicName + '\"',
                         fieldsArr: [
                             {
                                 name: 'subtopicName',
-                                text: 'Введите название подтемы',
+                                text: 'Введите название темы',
                                 inputType: 'text',
                                 inputValue: '',
                                 placeholder: '',
-                                required: true
+                                correctRegExp: /^([a-zа-яё\s]+)$/i
                             },
                             {
                                 name: 'lecturesHour',
@@ -262,15 +262,15 @@ function getForm(formId){
                                 inputType: 'number',
                                 inputValue: '0',
                                 placeholder: '',
-                                required: true
+                                correctRegExp: /^[0-9]+$/
                             },
                             {
                                 name: 'seminarsHour',
-                                text: 'Введите количество на семенары',
+                                text: 'Введите количество на семинары',
                                 inputType: 'number',
                                 inputValue: '0',
                                 placeholder: '',
-                                required: true
+                                correctRegExp: /^[0-9]+$/
                             },
                             {
                                 name: 'consultationsHour',
@@ -278,7 +278,7 @@ function getForm(formId){
                                 inputType: 'number',
                                 inputValue: '0',
                                 placeholder: '',
-                                required: true
+                                correctRegExp: /^[0-9]+$/
                             },
                             {
                                 name: 'independentWorkHour',
@@ -286,7 +286,7 @@ function getForm(formId){
                                 inputType: 'number',
                                 inputValue: '0',
                                 placeholder: '',
-                                required: true
+                                correctRegExp: /^[0-9]+$/
                             },
                             {
                                 name: 'formsOfMonitoringProgress',
@@ -294,7 +294,6 @@ function getForm(formId){
                                 inputType: 'text',
                                 inputValue: '',
                                 placeholder: '',
-                                required: true
                             }
                         ],
                         data: currentSubtopics,
@@ -362,6 +361,10 @@ function getForm(formId){
     }
 
     function showOneMore (e, formData, self){
+        if(self._isIncorrect){
+            return;
+        }
+
         for(const [key, value] of Object.entries(formData)){
             self._objectToSaveData[key] = value;
         }
