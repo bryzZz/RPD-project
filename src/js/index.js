@@ -49,7 +49,7 @@ function getForm(formId){
                     inputType: 'number',
                     inputValue: '0',
                     placeholder: '0',
-                    required: true
+                    correctRegExp: /^[0-9]+$/
                 },
                 {
                     name: 'numberOfHoursAll',
@@ -57,7 +57,7 @@ function getForm(formId){
                     inputType: 'number',
                     inputValue: '0',
                     placeholder: '0',
-                    required: true
+                    correctRegExp: /^[0-9]+$/
                 },
                 {
                     name: 'examHours',
@@ -65,7 +65,7 @@ function getForm(formId){
                     inputType: 'number',
                     inputValue: '0',
                     placeholder: '0',
-                    required: true
+                    correctRegExp: /^[0-9]+$/
                 },
                 {
                     name: 'finalExamination',
@@ -74,7 +74,7 @@ function getForm(formId){
                     inputValue: 'Экз.',
                     datalist: ['Экз.', 'Зачёт'],
                     placeholder: '',
-                    required: true
+                    correctRegExp: /^([a-zа-яё\s]+)$/i
                 },
                 {
                     name: 'numberOfSemesters',
@@ -83,7 +83,7 @@ function getForm(formId){
                     inputValue: '2',
                     datalist: ['1', '2'],
                     placeholder: '',
-                    required: true
+                    correctRegExp: /^(?=.{1}$)(1|2)+$/
                 }
             ],
             data: allData,
