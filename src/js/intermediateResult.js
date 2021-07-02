@@ -38,7 +38,7 @@ export default function intermediateResult(container, data){
     table1.innerHTML += `
         <thead>
             <tr>
-                <td rowspan="3">п/п</td>
+                <td rowspan="3" width="4%">п/п</td>
                 <td rowspan="3">Раздел дисциплины/темы</td>
                 <td rowspan="3">Семестр</td>
                 <td colspan="4">Виды учебной работы, включая самостоятельную работу обучающихся и трудоемкость(в часах)</td>

@@ -35,40 +35,60 @@ export default class Form{
                 className: this._formClass + '__field-text', 
                 textContent: text + ':'
             });
-            const input = createElement({
-                tagName: 'input', 
-                className: this._formClass + '__field-input',
-                attributes: {
-                    type: inputType,
-                    name: name,
-                    tabindex: i+1,
-                    placeholder: placeholder,
-                    value: this._data[name] ? this._data[name] : inputValue
+
+            formItem.append(p);
+
+            if(inputType !== 'textarea'){
+                const input = createElement({
+                    tagName: 'input', 
+                    className: this._formClass + '__field-input',
+                    attributes: {
+                        type: inputType,
+                        name: name,
+                        tabindex: i+1,
+                        placeholder: placeholder,
+                        value: this._data[name] ? this._data[name] : inputValue
+                    }
+                });
+    
+                input.addEventListener('input', (e) => {
+                    if(!correctRegExp.test(e.target.value)){
+                        e.target.classList.add(this._formClass + '__field-input--incorrect');
+                        this._isIncorrect = true;
+                    }else{
+                        e.target.classList.remove(this._formClass + '__field-input--incorrect');
+                        this._isIncorrect = false;
+                    }
+                });
+
+                formItem.append(input);
+
+                // если для элемента есть варианты выбора то вставялем и их в вёрстку
+                if(datalist){
+                    const list = createElement({tagName: 'datalist', attributes: {id: name}});
+
+                    input.setAttribute('list', name);
+
+                    datalist.forEach(item => {list.innerHTML += `<option value="${item}">`;});
+
+                    formItem.append(list);
                 }
-            });
+            }else{
+                const textarea = createElement({
+                    tagName: 'textarea', 
+                    className: this._formClass + '__field-input',
+                    attributes: {
+                        type: inputType,
+                        name: name,
+                        tabindex: i+1,
+                        placeholder: placeholder,
+                        value: this._data[name] ? this._data[name] : inputValue
+                    }
+                });
 
-            input.addEventListener('input', (e) => {
-                if(!correctRegExp.test(e.target.value)){
-                    e.target.classList.add(this._formClass + '__field-input--incorrect');
-                    this._isIncorrect = true;
-                }else{
-                    e.target.classList.remove(this._formClass + '__field-input--incorrect');
-                    this._isIncorrect = false;
-                }
-            });
-
-            formItem.append(p, input);
-
-            // если для элемента есть варианты выбора то вставялем и их в вёрстку
-            if(datalist){
-                const list = createElement({tagName: 'datalist', attributes: {id: name}});
-
-                input.setAttribute('list', name);
-
-                datalist.forEach(item => {list.innerHTML += `<option value="${item}">`;});
-
-                formItem.append(list);
+                formItem.append(textarea);
             }
+
 
             formFields.append(formItem); // добавляем вёрску элемента во внутрь формы
         }
@@ -90,13 +110,15 @@ export default class Form{
                 for(let i = 0; i < this._fieldsArr.length; i++){
                     const input = form.querySelectorAll('.' + this._formClass + '__field-input')[i];
                     const {correctRegExp} = this._fieldsArr[i];
-                    if(!correctRegExp.test(input.value)){
-                        input.classList.add(this._formClass + '__field-input--incorrect');
-                        return;
-                    }else{
-                        input.classList.remove(this._formClass + '__field-input--incorrect');
+                    if(correctRegExp){
+                        if(!correctRegExp.test(input.value)){
+                            input.classList.add(this._formClass + '__field-input--incorrect');
+                            return;
+                        }else{
+                            input.classList.remove(this._formClass + '__field-input--incorrect');
+                        }
                     }
-                }
+                }   
 
                 for(const [key, value] of new FormData(form)){
                     this._objectToSaveData[key] = value;

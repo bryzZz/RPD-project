@@ -105,6 +105,9 @@ function getForm(formId){
         
         //end of first part
         if(currentSem === undefined){
+            allComplitedFieldsToFalse(allData);
+            console.log(allData);
+
             setNewForm(formContainer, 4)
             // title.textContent = 'that it, check console';
             // console.log(allData);
@@ -220,7 +223,23 @@ function getForm(formId){
                     inputValue: '0',
                     placeholder: '',
                     correctRegExp: /^[0-9]+$/
-                }
+                },
+                {
+                    name: 'independentWorkType',
+                    text: 'Введите вид самостоятельные работы',
+                    inputType: 'textarea',
+                    inputValue: '',
+                    placeholder: 'Вид самостоятельные работы',
+                    // correctRegExp: /.|\s/gm
+                },
+                {
+                    name: 'educationalAndMethodologicalSupportOfIndependentWork',
+                    text: 'Введите учебно-методическое обеспечение самостоятельной работы',
+                    inputType: 'textarea',
+                    inputValue: '',
+                    placeholder: 'Учебно-методическое обеспечение самостоятельной работы',
+                    // correctRegExp: /.|\s/gm
+                },
             ],
             data: currentTopic,
             objectToSaveData: currentTopic,
@@ -310,11 +329,44 @@ function getForm(formId){
             buttons: [['Далее', showOneMore], ['Закончить', submit]]
         }).getForm();
     }else if(formId === 4){ // second part start
-        const topic = topicsGenerator();
+        // const topic = topicsGenerator();
+
+        let currentTopic, currentSem;
+        for(const semester of allData.semesters){
+            if(!semester.complited){
+                for(const topic of semester.topics){
+                    if(!topic.complited && +topic.independentWorkHour > 0){
+                        currentTopic = topic;
+                        break;
+                    }
+                }
+                currentSem = semester;
+                break;
+            }
+        }
+
+        title.textContent = `${+currentSem.semesterId + 1} семестр`;
+
+        const subtopics = [];
+        for(const subtopic of currentTopic){
+            if(+subtopic.independentWorkHour > 0){
+                subtopics.push(
+                    {
+                        name: subtopic.subtopicName,
+                        text: 'Введите название дисциплины',
+                        inputType: 'text',
+                        inputValue: 'ЯРСК',
+                        placeholder: 'ЯРСК',
+                        correctRegExp: /^([a-zа-яё.\s]+)$/i
+                    }
+                );
+            }
+        }
+
         return new Form({
             id: formId,
             formClass: 'form',
-            legend: 'План внеаудиторной самостоятельной работы обучающихся по дисциплине',
+            legend: `\"План внеаудиторной самостоятельной работы обучающихся по дисциплине\" \n Тема ${currentTopic.topicName} - общее количество часов на самостоятельные работы: ${currentTopic.independentWorkHour}`,
             fieldsArr: [
                 {
                     name: 'disciplineName',
@@ -388,6 +440,17 @@ function getForm(formId){
         setNewForm(formContainer, self._id);
     
         localStorage.setItem('allData', JSON.stringify(allData));
+    }
+
+    function allComplitedFieldsToFalse(data){
+        for(const field in data){
+            if(data[field] instanceof Object){
+                allComplitedFieldsToFalse(data[field]);
+            }
+            if(field === 'complited'){
+                data[field] = false;
+            }
+        }
     }
 
     return;
