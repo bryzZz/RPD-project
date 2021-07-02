@@ -227,21 +227,25 @@ function getForm(formId){
             buttons: [['Далее', showOneMore], ['Закончить', submit]]
         }).getForm();
     }else if(formId === 3){
-        let currentTopic;
+        let currentTopic, currentSem;
         for(const semester of allData.semesters){
-            for(const topic of semester.topics){
-                if(!topic.complited){
-                    currentTopic = topic;
-                    break;
+            if(!semester.complited){
+                for(const topic of semester.topics){
+                    if(!topic.complited){
+                        currentTopic = topic;
+                        break;
+                    }
                 }
-
-                //end of each semester
-                currentSem.complited = true;
-                setNewForm(formContainer, 1);
-                return;
+                currentSem = semester;
+                break;
             }
+        }
 
-            break;
+        if(currentTopic === undefined){
+            //end of each semester
+            currentSem.complited = true;
+            setNewForm(formContainer, 1);
+            return;
         }
 
         currentTopic.subtopics.push({});
@@ -354,15 +358,18 @@ function getForm(formId){
             for(let semester of allData.semesters){
                 if(!semester.complited){
                     currentSem = semester;
+
+                    for(let topic of currentSem.topics){
+                        if(!topic.complited){
+                            currentTopic = topic;
+                            break;
+                        }
+                    }
+
                     break;
                 }
             }
-            for(let topic of currentSem.topics){
-                if(!topic.complited){
-                    currentTopic = topic;
-                    break;
-                }
-            }
+            
             if(self._id === 2){
                 currentSem.isTopicsComplited = true;
             }
