@@ -335,7 +335,7 @@ function getForm(formId){
             ],
             data: allData,
             objectToSaveData: allData,
-            buttons: [['Далее', submit]]
+            buttons: [['Далее', submit], ['download docx file', generateDocxFile(allData)]]
         }).getForm();
     }
 
@@ -353,35 +353,31 @@ function getForm(formId){
                 self._objectToSaveData.semesters = semesters;
             }
 
-        }else{
-            let currentSem, currentTopic;
+        }else if(self._id === 2){
             for(let semester of allData.semesters){
                 if(!semester.complited){
-                    currentSem = semester;
-
-                    for(let topic of currentSem.topics){
-                        if(!topic.complited){
-                            currentTopic = topic;
-                            break;
-                        }
-                    }
-
+                    semester.isTopicsComplited = true;
                     break;
                 }
             }
-            
-            if(self._id === 2){
-                currentSem.isTopicsComplited = true;
-            }
-            else if(self._id === 3){
-                currentTopic.complited = true;
+        }else if(self._id === 3){
+            for(let semester of allData.semesters){
+                if(!semester.complited){
+                    for(let topic of semester.topics){
+                        if(!topic.complited){
+                            
+                            topic.complited = true;
                 
-                intermediateResult(container, allData);
-                setNewForm(formContainer, self._id);
-        
-                localStorage.setItem('allData', JSON.stringify(allData));
-    
-                return;
+                            intermediateResult(container, allData);
+                            setNewForm(formContainer, self._id);
+                    
+                            localStorage.setItem('allData', JSON.stringify(allData));
+
+                            return;
+                        }
+                    }
+                    break;
+                }
             }
         }
 

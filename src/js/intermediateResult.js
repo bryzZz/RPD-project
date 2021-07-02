@@ -87,7 +87,7 @@ export default function intermediateResult(container, data){
                     `${topicIndex+1}.${subtopicIndex+1}`,
                     subtopic.subtopicName,
                     semesterIndex + 1,
-                    subtopic.lectureHour || '',
+                    subtopic.lecturesHour || '',
                     subtopic.seminarsHour || '',
                     subtopic.consultationsHour || '',
                     subtopic.independentWorkHour || '',
