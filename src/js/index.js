@@ -106,14 +106,9 @@ function getForm(formId){
         //end of first part
         if(currentSem === undefined){
             allComplitedFieldsToFalse(allData);
-            console.log(allData);
 
             setNewForm(formContainer, 4)
-            // title.textContent = 'that it, check console';
-            // console.log(allData);
-            // container.innerHTML += '<button class="downloadFile">download docx file</button>';
-            // const downloadDocxFile = document.querySelector('.downloadFile');
-            // downloadDocxFile.addEventListener('click', (e) => generateDocxFile(allData));
+    
             return;
         }
 
@@ -224,22 +219,6 @@ function getForm(formId){
                     placeholder: '',
                     correctRegExp: /^[0-9]+$/
                 },
-                {
-                    name: 'independentWorkType',
-                    text: 'Введите вид самостоятельные работы',
-                    inputType: 'textarea',
-                    inputValue: '',
-                    placeholder: 'Вид самостоятельные работы',
-                    // correctRegExp: /.|\s/gm
-                },
-                {
-                    name: 'educationalAndMethodologicalSupportOfIndependentWork',
-                    text: 'Введите учебно-методическое обеспечение самостоятельной работы',
-                    inputType: 'textarea',
-                    inputValue: '',
-                    placeholder: 'Учебно-методическое обеспечение самостоятельной работы',
-                    // correctRegExp: /.|\s/gm
-                },
             ],
             data: currentTopic,
             objectToSaveData: currentTopic,
@@ -329,65 +308,26 @@ function getForm(formId){
             buttons: [['Далее', showOneMore], ['Закончить', submit]]
         }).getForm();
     }else if(formId === 4){ // second part start
-        // const topic = topicsGenerator();
-
-        let currentTopic, currentSem;
-        for(const semester of allData.semesters){
-            if(!semester.complited){
-                for(const topic of semester.topics){
-                    if(!topic.complited && +topic.independentWorkHour > 0){
-                        currentTopic = topic;
-                        break;
-                    }
-                }
-                currentSem = semester;
-                break;
-            }
-        }
-
-        title.textContent = `${+currentSem.semesterId + 1} семестр`;
-
-        const subtopics = [];
-        for(const subtopic of currentTopic){
-            if(+subtopic.independentWorkHour > 0){
-                subtopics.push(
-                    {
-                        name: subtopic.subtopicName,
-                        text: 'Введите название дисциплины',
-                        inputType: 'text',
-                        inputValue: 'ЯРСК',
-                        placeholder: 'ЯРСК',
-                        correctRegExp: /^([a-zа-яё.\s]+)$/i
-                    }
-                );
-            }
-        }
+        title.textContent = 'that it, check console';
+        console.log(allData);
 
         return new Form({
             id: formId,
             formClass: 'form',
-            legend: `\"План внеаудиторной самостоятельной работы обучающихся по дисциплине\" \n Тема ${currentTopic.topicName} - общее количество часов на самостоятельные работы: ${currentTopic.independentWorkHour}`,
+            legend: 'Примерная тематика курсовых работ (проектов)',
             fieldsArr: [
                 {
-                    name: 'disciplineName',
-                    text: 'Введите название дисциплины',
-                    inputType: 'text',
-                    inputValue: 'ЯРСК',
-                    placeholder: 'ЯРСК',
-                    correctRegExp: /^([a-zа-яё.\s]+)$/i
-                },
-                {
-                    name: 'laborIntensity',
-                    text: 'Введите трудоёмкость дисциплины',
-                    inputType: 'number',
-                    inputValue: '0',
-                    placeholder: '0',
-                    correctRegExp: /^[0-9]+$/
+                    name: 'approximateTopicsOfTermPapers',
+                    text: 'Примерная тематика курсовых работ (проектов)',
+                    inputType: 'textarea',
+                    inputValue: '',
+                    placeholder: '',
+                    correctRegExp: /^([a-zа-яё.\-\s]+)$/i
                 },
             ],
             data: allData,
             objectToSaveData: allData,
-            buttons: [['Далее', submit], ['download docx file', generateDocxFile(allData)]]
+            buttons: [['Скачать файл', submit]]
         }).getForm();
     }
 
@@ -427,6 +367,10 @@ function getForm(formId){
                     break;
                 }
             }
+        }else if(self._id === 4){
+            generateDocxFile(allData);
+            localStorage.setItem('allData', JSON.stringify(allData));
+            return;
         }
 
         intermediateResult(container, allData);
@@ -454,12 +398,4 @@ function getForm(formId){
     }
 
     return;
-}
-
-function* topicsGenerator(){
-    for(const semester of allData.semesters){
-        for(const topic of semester.topics){
-            yield topic;
-        }
-    }
 }
