@@ -97,7 +97,12 @@ export default class Form{
                         input.classList.remove(this._formClass + '__field-input--incorrect');
                     }
                 }
-                return func(Object.fromEntries(new FormData(form)), this);
+
+                for(const [key, value] of new FormData(form)){
+                    this._objectToSaveData[key] = value;
+                }
+
+                return func(this);
             }
 
             btn.addEventListener('click', (e) => validateForm(e));

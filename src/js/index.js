@@ -339,11 +339,7 @@ function getForm(formId){
         }).getForm();
     }
 
-    function submit (formData, self) {
-        for(const [key, value] of Object.entries(formData)){
-            self._objectToSaveData[key] = value;
-        }
-
+    function submit (self) {
         if(self._id === 0){ // если форма первая то информация просто идёт в общий объект
             if(!self._objectToSaveData.semesters){
                 const semesters = [];
@@ -387,11 +383,7 @@ function getForm(formId){
         localStorage.setItem('allData', JSON.stringify(allData));
     }
 
-    function showOneMore (formData, self){
-        for(const [key, value] of Object.entries(formData)){
-            self._objectToSaveData[key] = value;
-        }
-
+    function showOneMore (self){
         intermediateResult(container, allData);
         setNewForm(formContainer, self._id);
     
