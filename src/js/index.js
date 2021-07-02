@@ -18,15 +18,16 @@ setNewForm(formContainer, 0); // добавляем в этот контейне
 // основная функция которая очищает контейнер форм и ложит туда новую
 function setNewForm(container, formId){
     container.innerHTML = ''; // очистка внутренностей контейнера
-    container.append(getForm(formId)); // добавление туда новой формы
-    formContainer.querySelectorAll('.form__field-input')[0].select();
+    const form = getForm(formId);
+    if(form){
+        container.append(form); // добавление туда новой формы
+        formContainer.querySelectorAll('.form__field-input')[0].select();
+    }
 }
 
 // функция которая возвращает форму по её id
 function getForm(formId){
-    // console.log(allData);
-    // сотрим какой id и возвращаем новую форму
-    if(formId === 0){
+    if(formId === 0){ // first part start
         title.textContent = 'РПД IV пункт';
         title.classList.add('center');
 
@@ -90,83 +91,80 @@ function getForm(formId){
             objectToSaveData: allData,
             buttons: [['Далее', submit]]
         }).getForm();
-    }else{
-        for(let i = 0; i < allData.semesters.length; i++){ // показать какой семестр на странице
-            if(!allData.semesters[i].complited){
-                document.querySelector('.title').textContent = `${i+1} семестр`;
-                document.querySelector('.title').classList.remove('center');
-                break;
-            }
-        }
-
-        let currentSem; // находим первый незаполненый семестр
-        for(let semester of allData.semesters){
+    }else if(formId === 1){
+        let currentSem;
+        for(const semester of allData.semesters){ // показать какой семестр на странице
             if(!semester.complited){
+                title.textContent = `${+semester.semesterId + 1} семестр`;
+                title.classList.remove('center');
+
                 currentSem = semester;
                 break;
             }
         }
         
+        //end of first part
         if(currentSem === undefined){
-            document.querySelector('.title').textContent = 'that it, check console';
-            console.log(allData);
-            container.innerHTML += '<button class="downloadFile">download docx file</button>';
-            const downloadDocxFile = document.querySelector('.downloadFile');
-            downloadDocxFile.addEventListener('click', (e) => generateDocxFile(allData));
+            setNewForm(formContainer, 4)
+            // title.textContent = 'that it, check console';
+            // console.log(allData);
+            // container.innerHTML += '<button class="downloadFile">download docx file</button>';
+            // const downloadDocxFile = document.querySelector('.downloadFile');
+            // downloadDocxFile.addEventListener('click', (e) => generateDocxFile(allData));
             return;
         }
 
-        if(formId === 1){
-            return new Form({
-                id: formId,
-                formClass: 'form',
-                legend: 'Семестр',
-                fieldsArr: [
-                    {
-                        name: 'lecturesHour',
-                        text: 'Введите количество на лекции',
-                        inputType: 'number',
-                        inputValue: '0',
-                        placeholder: '',
-                        correctRegExp: /^[0-9]+$/
-                    },
-                    {
-                        name: 'seminarsHour',
-                        text: 'Введите количество на семинары',
-                        inputType: 'number',
-                        inputValue: '0',
-                        placeholder: '',
-                        correctRegExp: /^[0-9]+$/
-                    },
-                    {
-                        name: 'consultationsHour',
-                        text: 'Введите количество на консультации',
-                        inputType: 'number',
-                        inputValue: '0',
-                        placeholder: '',
-                        correctRegExp: /^[0-9]+$/
-                    },
-                    {
-                        name: 'independentWorkHour',
-                        text: 'Введите количество на самостоятельные работы',
-                        inputType: 'number',
-                        inputValue: '0',
-                        placeholder: '',
-                        correctRegExp: /^[0-9]+$/
-                    }
-                ],
-                data: currentSem,
-                objectToSaveData: currentSem,
-                buttons: [['Далее', submit]]
-            }).getForm();
-        }else{
-            if(formId === 2){
-                let currentTopic;
-                if(!currentSem.isTopicsComplited){
-                    currentSem.topics.push({complited: false, subtopics: []});
-                    currentTopic = currentSem.topics[currentSem.topics.length - 1];
+        return new Form({
+            id: formId,
+            formClass: 'form',
+            legend: 'Семестр',
+            fieldsArr: [
+                {
+                    name: 'lecturesHour',
+                    text: 'Введите количество на лекции',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                },
+                {
+                    name: 'seminarsHour',
+                    text: 'Введите количество на семинары',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                },
+                {
+                    name: 'consultationsHour',
+                    text: 'Введите количество на консультации',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                },
+                {
+                    name: 'independentWorkHour',
+                    text: 'Введите количество на самостоятельные работы',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                }
+            ],
+            data: currentSem,
+            objectToSaveData: currentSem,
+            buttons: [['Далее', submit]]
+        }).getForm();
+    }else if(formId === 2){
+        let currentTopic;
+        for(const semester of allData.semesters){
+            if(!semester.complited){
+                if(!semester.isTopicsComplited){
+                    semester.topics.push({complited: false, subtopics: []});
+                    currentTopic = semester.topics[semester.topics.length - 1];
                 }else{
-                    for(let topic of currentSem.topics){
+                    for(const topic of semester.topics){
                         if(!topic.complited){
                             currentTopic = topic;
                             break;
@@ -174,136 +172,167 @@ function getForm(formId){
                     }
                 }
 
-                return new Form({
-                    id: formId,
-                    formClass: 'form',
-                    legend: 'Раздел',
-                    fieldsArr: [
-                        {
-                            name: 'topicName',
-                            text: 'Введите название раздела',
-                            inputType: 'text',
-                            inputValue: '',
-                            placeholder: '',
-                            correctRegExp: /^([a-zа-яё.\-\s]+)$/i
-                        },
-                        {
-                            name: 'lecturesHour',
-                            text: 'Введите количество на лекции',
-                            inputType: 'number',
-                            inputValue: '0',
-                            placeholder: '',
-                            correctRegExp: /^[0-9]+$/
-                        },
-                        {
-                            name: 'seminarsHour',
-                            text: 'Введите количество на семинары',
-                            inputType: 'number',
-                            inputValue: '0',
-                            placeholder: '',
-                            correctRegExp: /^[0-9]+$/
-                        },
-                        {
-                            name: 'consultationsHour',
-                            text: 'Введите количество на консультации',
-                            inputType: 'number',
-                            inputValue: '0',
-                            placeholder: '',
-                            correctRegExp: /^[0-9]+$/
-                        },
-                        {
-                            name: 'independentWorkHour',
-                            text: 'Введите количество на самостоятельные работы',
-                            inputType: 'number',
-                            inputValue: '0',
-                            placeholder: '',
-                            correctRegExp: /^[0-9]+$/
-                        }
-                    ],
-                    data: currentTopic,
-                    objectToSaveData: currentTopic,
-                    buttons: [['Далее', showOneMore], ['Закончить', submit]]
-                }).getForm();
-            }else{
-                if(formId === 3){
-                    let currentTopic;
-                    for(let topic of currentSem.topics){
-                        if(!topic.complited){
-                            currentTopic = topic;
-                            break;
-                        }
-                    }
-
-                    if(currentTopic === undefined){
-                        currentSem.complited = true;
-                        setNewForm(formContainer, 1);
-                        return;
-                    }
-
-                    currentTopic.subtopics.push({});
-                    let currentSubtopics = currentTopic.subtopics[currentTopic.subtopics.length - 1];
-
-                    return new Form({
-                        id: formId,
-                        formClass: 'form',
-                        legend: 'Тема раздела \"' + currentTopic.topicName + '\"',
-                        fieldsArr: [
-                            {
-                                name: 'subtopicName',
-                                text: 'Введите название темы',
-                                inputType: 'text',
-                                inputValue: '',
-                                placeholder: '',
-                                correctRegExp: /^([a-zа-яё.\-\s]+)$/i
-                            },
-                            {
-                                name: 'lecturesHour',
-                                text: 'Введите количество на лекции',
-                                inputType: 'number',
-                                inputValue: '0',
-                                placeholder: '',
-                                correctRegExp: /^[0-9]+$/
-                            },
-                            {
-                                name: 'seminarsHour',
-                                text: 'Введите количество на семинары',
-                                inputType: 'number',
-                                inputValue: '0',
-                                placeholder: '',
-                                correctRegExp: /^[0-9]+$/
-                            },
-                            {
-                                name: 'consultationsHour',
-                                text: 'Введите количество на консультации',
-                                inputType: 'number',
-                                inputValue: '0',
-                                placeholder: '',
-                                correctRegExp: /^[0-9]+$/
-                            },
-                            {
-                                name: 'independentWorkHour',
-                                text: 'Введите количество на самостоятельные работы',
-                                inputType: 'number',
-                                inputValue: '0',
-                                placeholder: '',
-                                correctRegExp: /^[0-9]+$/
-                            },
-                            {
-                                name: 'formsOfMonitoringProgress',
-                                text: 'Формы текущего контроля успеваемости',
-                                inputType: 'text',
-                                inputValue: '',
-                                placeholder: '',
-                                correctRegExp: /^([a-zа-яё0-9,\s]+)$/i
-                            }
-                        ],
-                        data: currentSubtopics,
-                        objectToSaveData: currentSubtopics,
-                        buttons: [['Далее', showOneMore], ['Закончить', submit]]
-                    }).getForm();
-                }
-            } 
+                break;
+            }
         }
+
+        return new Form({
+            id: formId,
+            formClass: 'form',
+            legend: 'Раздел',
+            fieldsArr: [
+                {
+                    name: 'topicName',
+                    text: 'Введите название раздела',
+                    inputType: 'text',
+                    inputValue: '',
+                    placeholder: '',
+                    correctRegExp: /^([a-zа-яё.\-\s]+)$/i
+                },
+                {
+                    name: 'lecturesHour',
+                    text: 'Введите количество на лекции',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                },
+                {
+                    name: 'seminarsHour',
+                    text: 'Введите количество на семинары',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                },
+                {
+                    name: 'consultationsHour',
+                    text: 'Введите количество на консультации',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                },
+                {
+                    name: 'independentWorkHour',
+                    text: 'Введите количество на самостоятельные работы',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                }
+            ],
+            data: currentTopic,
+            objectToSaveData: currentTopic,
+            buttons: [['Далее', showOneMore], ['Закончить', submit]]
+        }).getForm();
+    }else if(formId === 3){
+        let currentTopic;
+        for(const semester of allData.semesters){
+            for(const topic of semester.topics){
+                if(!topic.complited){
+                    currentTopic = topic;
+                    break;
+                }
+
+                //end of each semester
+                currentSem.complited = true;
+                setNewForm(formContainer, 1);
+                return;
+            }
+
+            break;
+        }
+
+        currentTopic.subtopics.push({});
+        let currentSubtopic = currentTopic.subtopics[currentTopic.subtopics.length - 1];
+
+        return new Form({
+            id: formId,
+            formClass: 'form',
+            legend: 'Тема раздела \"' + currentTopic.topicName + '\"',
+            fieldsArr: [
+                {
+                    name: 'subtopicName',
+                    text: 'Введите название темы',
+                    inputType: 'text',
+                    inputValue: '',
+                    placeholder: '',
+                    correctRegExp: /^([a-zа-яё.\-\s]+)$/i
+                },
+                {
+                    name: 'lecturesHour',
+                    text: 'Введите количество на лекции',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                },
+                {
+                    name: 'seminarsHour',
+                    text: 'Введите количество на семинары',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                },
+                {
+                    name: 'consultationsHour',
+                    text: 'Введите количество на консультации',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                },
+                {
+                    name: 'independentWorkHour',
+                    text: 'Введите количество на самостоятельные работы',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '',
+                    correctRegExp: /^[0-9]+$/
+                },
+                {
+                    name: 'formsOfMonitoringProgress',
+                    text: 'Формы текущего контроля успеваемости',
+                    inputType: 'text',
+                    inputValue: '',
+                    placeholder: '',
+                    correctRegExp: /^([a-zа-яё0-9,\s]+)$/i
+                }
+            ],
+            data: currentSubtopic,
+            objectToSaveData: currentSubtopic,
+            buttons: [['Далее', showOneMore], ['Закончить', submit]]
+        }).getForm();
+    }else if(formId === 4){ // second part start
+        const topic = topicsGenerator();
+        return new Form({
+            id: formId,
+            formClass: 'form',
+            legend: 'План внеаудиторной самостоятельной работы обучающихся по дисциплине',
+            fieldsArr: [
+                {
+                    name: 'disciplineName',
+                    text: 'Введите название дисциплины',
+                    inputType: 'text',
+                    inputValue: 'ЯРСК',
+                    placeholder: 'ЯРСК',
+                    correctRegExp: /^([a-zа-яё.\s]+)$/i
+                },
+                {
+                    name: 'laborIntensity',
+                    text: 'Введите трудоёмкость дисциплины',
+                    inputType: 'number',
+                    inputValue: '0',
+                    placeholder: '0',
+                    correctRegExp: /^[0-9]+$/
+                },
+            ],
+            data: allData,
+            objectToSaveData: allData,
+            buttons: [['Далее', submit]]
+        }).getForm();
     }
 
     function submit (formData, self) {
@@ -367,4 +396,12 @@ function getForm(formId){
     }
 
     return;
+}
+
+function* topicsGenerator(){
+    for(const semester of allData.semesters){
+        for(const topic of semester.topics){
+            yield topic;
+        }
+    }
 }
