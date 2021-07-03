@@ -1,7 +1,7 @@
 import {createElement} from './utils.js';
 
 export default class Form{
-    constructor({id, formClass, legend, fieldsArr, data, objectToSaveData, compliteFunction, againFunction, buttons}){
+    constructor({id, formClass, legend, fieldsArr, data, objectToSaveData, buttons}){
         this._id = id;
         this._formClass = formClass;
         this._legend = legend;
