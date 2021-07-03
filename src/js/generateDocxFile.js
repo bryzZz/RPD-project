@@ -427,18 +427,17 @@ export default function generateDocxFile(allData){
 					]
 				}),				
 				
-				new Paragraph({
+				new Paragraph({//Заголовок 4.1
 					spacing: {
 						after: 120,
 						before: 120,
 					},
+					indent: {
+						firstLine: 625,
+					},
 					alignment: AlignmentType.LEFT,
 					children: [
 						new TextRun({
-							spacing: {
-								after: 120,
-								before: 120,
-							},
 							text: "4.1 Содержание дисциплины, структуризированное по темам, с указанием видов учебных занятий и отведенного на них количества академических часов",
 							bold: true,
 							font: "Times New Roman",
@@ -449,18 +448,17 @@ export default function generateDocxFile(allData){
 				table1,
 				
 				new Paragraph(""),
-				new Paragraph({
+				new Paragraph({//Заголовок 4.4
 					spacing: {
-						after: 2,
-						before: 2,
+						after: 120,
+						before: 120,
 					},
-					alignment: AlignmentType.CENTER,
+					indent: {
+						firstLine: 625,
+					},
+					alignment: AlignmentType.LEFT,
 					children: [
 						new TextRun({
-							spacing: {
-								after: 120,
-								before: 120,
-							},
 							text: "4.4 Методические указания по организации самостоятельной работы студентов",
 							bold: true,
 							font: "Times New Roman",
@@ -600,7 +598,7 @@ export default function generateDocxFile(allData){
 					children: [
 						new TextRun({
 							bold: true,
-							text: "Подготовка к лекции.",
+							text: "Подготовка к лекции. ",
 							font: "Times New Roman",
 							size: 24,
 						}),
@@ -623,7 +621,7 @@ export default function generateDocxFile(allData){
 					children: [
 						new TextRun({
 							bold: true,
-							text: "Подготовка к практическому занятию.",
+							text: "Подготовка к практическому занятию. ",
 							font: "Times New Roman",
 							size: 24,
 						}),
@@ -646,7 +644,7 @@ export default function generateDocxFile(allData){
 					children: [
 						new TextRun({
 							bold: true,
-							text: "Подготовка к контрольной работе.",
+							text: "Подготовка к контрольной работе. ",
 							font: "Times New Roman",
 							size: 24,
 						}),
@@ -669,7 +667,7 @@ export default function generateDocxFile(allData){
 					children: [
 						new TextRun({
 							bold: true,
-							text: "Подготовка к экзамену.",
+							text: "Подготовка к экзамену. ",
 							font: "Times New Roman",
 							size: 24,
 						}),
@@ -710,7 +708,7 @@ export default function generateDocxFile(allData){
 					children: [
 						new TextRun({
 							bold: true,
-							text: "Составление глоссария",
+							text: "Составление глоссария ",
 							font: "Times New Roman",
 							size: 24,
 						}),
@@ -733,7 +731,7 @@ export default function generateDocxFile(allData){
 					children: [
 						new TextRun({
 							bold: true,
-							text: "Разработка проекта",
+							text: "Разработка проекта ",
 							font: "Times New Roman",
 							size: 24,
 						}),
@@ -756,7 +754,7 @@ export default function generateDocxFile(allData){
 					children: [
 						new TextRun({
 							bold: true,
-							text: "Информационный поиск",
+							text: "Информационный поиск ",
 							font: "Times New Roman",
 							size: 24,
 						}),
@@ -932,7 +930,7 @@ export default function generateDocxFile(allData){
 					children: [
 						new TextRun({
 							bold: true,
-							text: "Разработка мультимедийной презентации",
+							text: "Разработка мультимедийной презентации ",
 							font: "Times New Roman",
 							size: 24,
 						}),
@@ -1040,6 +1038,42 @@ export default function generateDocxFile(allData){
 					children: [
 						new TextRun({
 							text: "В ФБГОУ ВО «ИГУ» организация самостоятельной работы студентов регламентируется Положением о самостоятельной работе студентов, принятым Ученым советом ИГУ 22 июня 2012 г.",
+							font: "Times New Roman",
+							size: 24,
+						}),
+					]
+				}),
+			
+				new Paragraph({//Заголовок 4.5
+					spacing: {
+						after: 120,
+						before: 120,
+					},
+					indent: {
+						firstLine: 625,
+					},
+					alignment: AlignmentType.LEFT,
+					children: [
+						new TextRun({
+							text: "4.5 Примерная тематика курсовых работ (проектов)",
+							bold: true,
+							font: "Times New Roman",
+							size: 24,
+						}),
+					]
+				}),
+				new Paragraph({//В ФБГОУ ВО «ИГУ»
+					indent: {
+						firstLine: 625,
+					},
+					spacing: {
+						after: 2,
+						before: 2,
+					},
+					alignment: AlignmentType.LEFT,
+					children: [
+						new TextRun({
+							text: `${allData.approximateTopicsOfTermPapers}`,
 							font: "Times New Roman",
 							size: 24,
 						}),
