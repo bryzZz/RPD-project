@@ -112,50 +112,50 @@ export default function intermediateResult(container, data){
     `;
     inter.append(table1);
 
-    inter.append(createElement({
-        tagName: 'h2',
-        textContent: '4.3 Содержание учебного материала',
-        styles: {
-            fontSize: '12pt',
-            fontWeight: 'bold'
-        }
-    }));
-    let table3 = document.createElement('table');
-    let allTopicsNames = '';
-    data.semesters.forEach(semester => {
-        semester.topics.forEach((topic, topicIndex) => {
-            allTopicsNames += `${topic.topicName}${(topicIndex === semester.topics.length - 1) ? '' : ', '}`;
-        });
-    });
-    let allformsOfMonitoringProgress = '';
-    data.semesters.forEach(semester => {
-        semester.topics.forEach((topic) => {
-            topic.subtopics.forEach((subtopic, subtopicIndex) => {
-                allformsOfMonitoringProgress += `${subtopic.formsOfMonitoringProgress}${(subtopicIndex === topic.subtopics.length - 1) ? '' : ', '}`;
-            });
-        });
-    });
-    table3.innerHTML += `
-        <tbody>
-            <tr>
-                <td width="30%">Трудоемкость дисциплины (з.е.)</td>
-                <td>${data.laborIntensity || ''}</td>
-            </tr>
-            <tr>
-                <td>Наименование основных разделов (модулей)</td>
-                <td>${allTopicsNames || ''}</td>
-            </tr>
-            <tr>
-                <td>Формы текущего контроля</td>
-                <td>${allformsOfMonitoringProgress || ''}</td>
-            </tr>
-            <tr>
-                <td>ФФорма промежуточной аттестации</td>
-                <td>${data.finalExamination || ''}</td>
-            </tr>
-        </tbody>
-    `;
-    inter.append(table3);
+//     inter.append(createElement({
+//         tagName: 'h2',
+//         textContent: '4.3 Содержание учебного материала',
+//         styles: {
+//             fontSize: '12pt',
+//             fontWeight: 'bold'
+//         }
+//     }));
+//     let table3 = document.createElement('table');
+//     let allTopicsNames = '';
+//     data.semesters.forEach(semester => {
+//         semester.topics.forEach((topic, topicIndex) => {
+//             allTopicsNames += `${topic.topicName}${(topicIndex === semester.topics.length - 1) ? '' : ', '}`;
+//         });
+//     });
+//     let allformsOfMonitoringProgress = '';
+//     data.semesters.forEach(semester => {
+//         semester.topics.forEach((topic) => {
+//             topic.subtopics.forEach((subtopic, subtopicIndex) => {
+//                 allformsOfMonitoringProgress += `${subtopic.formsOfMonitoringProgress}${(subtopicIndex === topic.subtopics.length - 1) ? '' : ', '}`;
+//             });
+//         });
+//     });
+//     table3.innerHTML += `
+//         <tbody>
+//             <tr>
+//                 <td width="30%">Трудоемкость дисциплины (з.е.)</td>
+//                 <td>${data.laborIntensity || ''}</td>
+//             </tr>
+//             <tr>
+//                 <td>Наименование основных разделов (модулей)</td>
+//                 <td>${allTopicsNames || ''}</td>
+//             </tr>
+//             <tr>
+//                 <td>Формы текущего контроля</td>
+//                 <td>${allformsOfMonitoringProgress || ''}</td>
+//             </tr>
+//             <tr>
+//                 <td>ФФорма промежуточной аттестации</td>
+//                 <td>${data.finalExamination || ''}</td>
+//             </tr>
+//         </tbody>
+//     `;
+//     inter.append(table3);
 
 
     container.append(inter);
