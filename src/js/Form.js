@@ -94,12 +94,12 @@ export default class Form{
         }
 
         // добавить инпут файла если форма первая
-        if(this._id === 0){
-            const formField = createElement({tagName: 'div', className: this._formClass + '__field'});
-            formField.append(createElement({tagName: 'input', attributes: {type: 'file'}}));
+//         if(this._id === 0){
+//             const formField = createElement({tagName: 'div', className: this._formClass + '__field'});
+//             formField.append(createElement({tagName: 'input', attributes: {type: 'file'}}));
 
-            formFields.append(formField);
-        }
+//             formFields.append(formField);
+//         }
 
         // добавление кнопочек
         for(const [name, func] of this._buttons){
